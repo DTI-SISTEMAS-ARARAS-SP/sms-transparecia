@@ -1,12 +1,12 @@
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Api.Data;
+using Api.Dtos;
 using Api.Helpers;
 using Api.Models;
-using Api.Services.SystemLogsServices;
-using Api.Dtos;
+using Api.Services;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Api.Services.AuthServices
 {
@@ -39,11 +39,11 @@ namespace Api.Services.AuthServices
                 action: LogActionDescribe.Login(user.Username)
             );
 
-            var allowedResources = user.AccessPermissions
+            var allowedResources = (user.AccessPermissions ?? new List<AccessPermission>())
                 .Where(ap => ap.SystemResource != null && ap.SystemResource.Active)
                 .Select(ap => new SystemResourceOptionDto
                 {
-                    Id = ap.SystemResource.Id,
+                    Id = ap.SystemResource!.Id,
                     Name = ap.SystemResource.Name,
                     ExhibitionName = ap.SystemResource.ExhibitionName
                 })
@@ -52,6 +52,7 @@ namespace Api.Services.AuthServices
             return new LoginResponseDto
             {
                 Token = token,
+                Id = user.Id,
                 Username = user.Username,
                 FullName = user.FullName,
                 Permissions = allowedResources

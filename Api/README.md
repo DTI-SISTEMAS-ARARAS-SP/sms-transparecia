@@ -1,4 +1,4 @@
-# Generic Login Backend - PostgreSQL + .NET
+# Admin Pannel BoilerPlate Backend - PostgreSQL + .NET
 
 > Api com fluxo completo de autenticação **JWT**, implementado em **PostgreSQL + .NET**.  
 > Inclui **hash seguro de senhas (BCrypt)**, **emissão e validação de tokens JWT**, **controle customizável de permissões de acesso**,
@@ -232,7 +232,7 @@ Cada usuário possui uma lista de permissões vinculadas a recursos específicos
 
 Cada ação do tipo CREATE, UPDATE, DELETE ou LOGIN cia um registro em `system_logs`, contendo:
 
-- Id do usuário autenticado (resposável pela ação)
+- Id do usuário autenticado (responsável pela ação)
 - Descrição da ação executada
 - Data e hora em que a ação foi executada
 

@@ -1,13 +1,14 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Api.Dtos;
 using Api.Helpers;
 using Api.Interfaces;
 using Api.Models;
+using Api.Validations;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Api.Services.SystemLogsServices
+namespace Api.Services
 {
   public class GetLogsReport
   {
@@ -26,6 +27,8 @@ namespace Api.Services.SystemLogsServices
         int page = 1,
         int pageSize = 10)
     {
+      ValidateDateRange.EnsureValidPeriod(startDate, endDate);
+
       var query = _logRepo.Query()
           .Include(sl => sl.User)
           .AsQueryable();
@@ -34,13 +37,17 @@ namespace Api.Services.SystemLogsServices
         query = query.Where(sl => sl.UserId == userId.Value);
 
       if (!string.IsNullOrWhiteSpace(action))
-        query = query.Where(sl => EF.Functions.Like(sl.Action.ToLower(), $"%{action.ToLower()}%"));
+        query = query.Where(sl =>
+          EF.Functions.Like(sl.Action.ToLower(), $"%{action.ToLower()}%"));
 
       if (startDate.HasValue)
         query = query.Where(sl => sl.CreatedAt >= startDate.Value);
 
       if (endDate.HasValue)
-        query = query.Where(sl => sl.CreatedAt <= endDate.Value);
+      {
+        var endOfDay = endDate.Value.Date.AddDays(1);
+        query = query.Where(sl => sl.CreatedAt < endOfDay);
+      }
 
       query = query.OrderByDescending(sl => sl.CreatedAt);
 
