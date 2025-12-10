@@ -37,16 +37,17 @@ namespace Api.Services.AuthServices
             var usernameClaim = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
             var loginClaim = principal.Claims.FirstOrDefault(c => c.Type == "login")?.Value;
 
+            // Prioriza 'login' se disponível, depois 'Name', depois 'Email'
             var username = loginClaim ?? usernameClaim;
             var email = emailClaim;
 
-            if (emailClaim == null && usernameClaim == null)
+            if (email == null && username == null)
                 return null;
 
             var user = await _context.Users
                 .Include(u => u.AccessPermissions)
                 .ThenInclude(ap => ap.SystemResource)
-                .FirstOrDefaultAsync(u => u.Email == emailClaim || u.Username == usernameClaim);
+                .FirstOrDefaultAsync(u => u.Email == email || u.Username == username);
 
             if (user == null)
                 return null;
