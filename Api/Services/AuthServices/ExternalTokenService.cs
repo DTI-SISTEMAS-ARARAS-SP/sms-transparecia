@@ -35,6 +35,10 @@ namespace Api.Services.AuthServices
 
             var emailClaim = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             var usernameClaim = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var loginClaim = principal.Claims.FirstOrDefault(c => c.Type == "login")?.Value;
+
+            var username = loginClaim ?? usernameClaim;
+            var email = emailClaim;
 
             if (emailClaim == null && usernameClaim == null)
                 return null;
