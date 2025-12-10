@@ -1,0 +1,39 @@
+services:
+
+  api:
+    build:
+      context: ./Api
+      dockerfile: Dockerfile
+    container_name: sms-transparencia-api
+    env_file:
+      - ./Api/.env
+    ports:
+      - '5210:5210' # ajuste conforme a porta da sua API
+    restart: unless-stopped
+    stop_grace_period: 10s
+    security_opt:
+      - apparmor=unconfined
+    networks:
+      - sms-network
+
+  webapp:
+    build:
+      context: ./WebApp
+      dockerfile: Dockerfile
+    container_name: sms-transparencia-admin-panel
+    depends_on:
+      - api
+    ports:
+      - '5173:5173' # porta do Vite
+    environment:
+      - VITE_API_BASE_URL=http://192.168.1.111:5210/api
+    restart: unless-stopped
+    stop_grace_period: 10s
+    security_opt:
+      - apparmor=unconfined
+    networks:
+      - sms-network
+
+networks:
+  sms-network:
+    driver: bridge
