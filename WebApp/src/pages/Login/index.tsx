@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Box, Typography, Paper, Link, CircularProgress } from '@mui/material';
-import { LoginForm, PasswordResetRequestModal } from '../../components';
-import { useAuth } from '../../hooks';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { Box, Typography, Paper, Link, CircularProgress } from "@mui/material";
+import { LoginForm, PasswordResetRequestModal } from "../../components";
+import { useAuth } from "../../hooks";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [openResetModal, setOpenResetModal] = useState(false);
@@ -14,21 +14,21 @@ export default function Login() {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
-    const urlToken = searchParams.get('token');
+    const urlToken = searchParams.get("token");
 
     async function tryExternalLogin() {
       if (urlToken) {
         try {
           await handleExternalLogin({ externalToken: urlToken });
-          navigate('/profile', { replace: true });
+          navigate("/profile", { replace: true });
           return;
         } catch (error) {
-          console.error('Erro no login externo:', error);
+          console.error("Erro no login externo:", error);
         }
       }
 
       if (token) {
-        navigate('/profile', { replace: true });
+        navigate("/profile", { replace: true });
         return;
       }
 
@@ -42,10 +42,10 @@ export default function Login() {
     return (
       <Box
         sx={{
-          height: '100vh',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
         <CircularProgress />
@@ -56,23 +56,23 @@ export default function Login() {
   return (
     <Box
       sx={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <Paper
         elevation={3}
         sx={{
           padding: 4,
-          width: '100%',
+          width: "100%",
           maxWidth: 400,
           borderRadius: 2,
         }}
       >
         <Typography mb={2} variant="h5" align="center" gutterBottom>
-          Faça login no sistema
+          Login Convênios SMS
         </Typography>
 
         <LoginForm />
