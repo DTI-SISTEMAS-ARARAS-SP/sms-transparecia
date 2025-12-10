@@ -12,6 +12,8 @@ namespace Api.Data
     public DbSet<SystemResource> SystemResources { get; set; } = null!;
     public DbSet<AccessPermission> AccessPermissions { get; set; } = null!;
     public DbSet<SystemLog> SystemLogs { get; set; } = null!;
+    public DbSet<Convenio> Convenios { get; set; } = null!;
+    public DbSet<DocConvenio> DocConvenios { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
