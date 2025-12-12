@@ -46,3 +46,6 @@ coverage/
 # Environment variables
 .env*
 !.env.example
+
+# Uploads (arquivos enviados pelos usuários)
+uploads/

@@ -14,6 +14,8 @@ namespace Api.Controllers
     private readonly GetDocConveniosByConvenioId _getDocConveniosByConvenioId;
     private readonly UpdateDocConvenio _updateDocConvenio;
     private readonly DeleteDocConvenio _deleteDocConvenio;
+    private readonly UploadDocConvenio _uploadDocConvenio;
+    private readonly DownloadDocConvenio _downloadDocConvenio;
 
     public DocConveniosController(
       CreateDocConvenio createDocConvenio,
@@ -21,7 +23,9 @@ namespace Api.Controllers
       GetDocConvenioById getDocConvenioById,
       GetDocConveniosByConvenioId getDocConveniosByConvenioId,
       UpdateDocConvenio updateDocConvenio,
-      DeleteDocConvenio deleteDocConvenio)
+      DeleteDocConvenio deleteDocConvenio,
+      UploadDocConvenio uploadDocConvenio,
+      DownloadDocConvenio downloadDocConvenio)
     {
       _createDocConvenio = createDocConvenio;
       _getAllDocConvenios = getAllDocConvenios;
@@ -29,6 +33,8 @@ namespace Api.Controllers
       _getDocConveniosByConvenioId = getDocConveniosByConvenioId;
       _updateDocConvenio = updateDocConvenio;
       _deleteDocConvenio = deleteDocConvenio;
+      _uploadDocConvenio = uploadDocConvenio;
+      _downloadDocConvenio = downloadDocConvenio;
     }
 
     // POST: api/docconvenios
@@ -88,6 +94,32 @@ namespace Api.Controllers
       var deleted = await _deleteDocConvenio.ExecuteAsync(id);
       if (!deleted) return NotFound();
       return NoContent();
+    }
+
+    // POST: api/docconvenios/convenio/{convenioId}/upload
+    [HttpPost("convenio/{convenioId}/upload")]
+    [Consumes("multipart/form-data")]
+    public async Task<IActionResult> Upload(
+      int convenioId,
+      IFormFile file,
+      [FromForm] string tipoDocumento,
+      [FromForm] string? descricao = null)
+    {
+      if (file == null || file.Length == 0)
+        return BadRequest("Nenhum arquivo foi enviado.");
+
+      var uploaded = await _uploadDocConvenio.ExecuteAsync(convenioId, file, tipoDocumento, descricao);
+
+      return CreatedAtAction(nameof(GetById), new { id = uploaded.Id }, uploaded);
+    }
+
+    // GET: api/docconvenios/{id}/download
+    [HttpGet("{id:int}/download")]
+    public async Task<IActionResult> Download(int id)
+    {
+      var (fileBytes, fileName, contentType) = await _downloadDocConvenio.ExecuteAsync(id);
+
+      return File(fileBytes, contentType, fileName);
     }
   }
 }

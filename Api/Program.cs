@@ -66,6 +66,14 @@ builder.Services.AddCors(options =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<CurrentAuthUser>();
 
+// --- Registrar FileStorageService ---
+builder.Services.AddSingleton<Api.Services.FileStorageService>();
+
+// --- Configurar limite de upload de arquivos ---
+builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 10 * 1024 * 1024; // 10MB
+});
 
 // --- Registro automático de Services ---
 var assembly = Assembly.GetExecutingAssembly();
@@ -119,6 +127,7 @@ builder.Services.AddSwaggerGen(options =>
             new string[] {}
         }
     });
+
 });
 
 var app = builder.Build();

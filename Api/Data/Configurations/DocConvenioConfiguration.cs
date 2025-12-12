@@ -14,7 +14,7 @@ namespace Api.Data.Configurations
       builder.Property(d => d.CaminhoArquivo).IsRequired();
 
       builder.HasOne(d => d.Convenio)
-             .WithMany()
+             .WithMany(c => c.Documentos)
              .HasForeignKey(d => d.ConvenioId)
              .OnDelete(DeleteBehavior.Restrict);
 
