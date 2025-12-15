@@ -1,5 +1,5 @@
-import { createBrowserRouter } from 'react-router-dom';
-import ProtectedRoute from './ProtectedRoute';
+import { createBrowserRouter } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 import {
   Login,
   PasswordReset,
@@ -8,31 +8,36 @@ import {
   Resources,
   UnauthorizedAccess,
   Users,
-} from '../pages';
-import { PermissionsMap } from '../permissions/PermissionsMap';
-import { CleanLayout, DefaultLayout } from '../layouts';
+} from "../pages";
+import { PermissionsMap } from "../permissions/PermissionsMap";
+import { CleanLayout, DefaultLayout } from "../layouts";
 
 const publicRoutes = [
-  { path: '/login', element: <Login /> },
-  { path: '/password-reset', element: <PasswordReset /> },
+  { path: "/login", element: <Login /> },
+  { path: "/password-reset", element: <PasswordReset /> },
 ];
 
 const privateRoutes = [
-  { path: '/profile', element: <Profile /> },
+  { path: "/profile", element: <Profile /> },
   {
-    path: '/users',
+    path: "/users",
     element: <Users />,
     requiredPermission: PermissionsMap.USERS,
   },
   {
-    path: '/resources',
+    path: "/resources",
     element: <Resources />,
     requiredPermission: PermissionsMap.RESOURCES,
   },
   {
-    path: '/reports',
+    path: "/reports",
     element: <Reports />,
     requiredPermission: PermissionsMap.REPORTS,
+  },
+  {
+    path: "/convenios",
+    element: <div>Convenios</div>,
+    requiredPermission: PermissionsMap.CONVENIOS,
   },
 ];
 
@@ -49,9 +54,9 @@ const router = createBrowserRouter([
   {
     element: <CleanLayout />,
     children: [
-      { path: '/', element: <Login /> },
+      { path: "/", element: <Login /> },
       ...publicRoutes,
-      { path: '/unauthorized', element: <UnauthorizedAccess /> },
+      { path: "/unauthorized", element: <UnauthorizedAccess /> },
     ],
   },
 

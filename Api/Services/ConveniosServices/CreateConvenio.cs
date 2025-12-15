@@ -31,6 +31,9 @@ namespace Api.Services.ConveniosServices
       ValidateEntity.HasExpectedProperties<ConvenioCreateDto>(dto);
       ValidateEntity.HasExpectedValues<ConvenioCreateDto>(dto);
 
+      // Validar período de vigência
+      ValidateDateRange.EnsureValidPeriod(dto.DataVigenciaInicio, dto.DataVigenciaFim);
+
       if (await _convenioRepo.Query().AnyAsync(c => c.NumeroConvenio == dto.NumeroConvenio))
         throw new AppException("Número de convênio já cadastrado.", (int)HttpStatusCode.Conflict);
 

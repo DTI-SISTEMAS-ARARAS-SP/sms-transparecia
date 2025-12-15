@@ -3,32 +3,39 @@ import {
   faCogs,
   faUserAlt,
   faUsers,
-} from '@fortawesome/free-solid-svg-icons';
-import type { MenuItem } from '../interfaces';
-import { PermissionsMap } from '../permissions/PermissionsMap';
+  faFile,
+} from "@fortawesome/free-solid-svg-icons";
+import type { MenuItem } from "../interfaces";
+import { PermissionsMap } from "../permissions/PermissionsMap";
 
 export const menuItems: MenuItem[] = [
   {
-    label: 'Perfil',
+    label: "Perfil",
     icon: faUserAlt,
-    route: '/profile',
+    route: "/profile",
   },
   {
-    label: 'Usuários',
+    label: "Usuários",
     icon: faUsers,
-    route: '/users',
+    route: "/users",
     permission: PermissionsMap.USERS,
   },
   {
-    label: 'Recursos',
+    label: "Recursos",
     icon: faCogs,
-    route: '/resources',
+    route: "/resources",
     permission: PermissionsMap.RESOURCES,
   },
   {
-    label: 'Relatórios',
+    label: "Relatórios",
     icon: faChartBar,
-    route: '/reports',
+    route: "/reports",
     permission: PermissionsMap.REPORTS,
+  },
+  {
+    label: "Convênios",
+    icon: faFile,
+    route: "/convenios",
+    permission: PermissionsMap.CONVENIOS,
   },
 ];

@@ -15,8 +15,11 @@ namespace Api.Helpers
 
             { "/resources", new[] { 3 } },
 
+            { "/convenios", new[] { 6 } },  // Gestão de Convênios
+
+            { "/docconvenios", new[] { 6 } },  // Documentos de Convênios (mesma permissão)
+
             // Outros endpoints podem ser adicionados aqui
-            // { "/outro-endpoint", new[] { 5 } }
         };
 
     public static int[] GetRequiredPermissions(string path)

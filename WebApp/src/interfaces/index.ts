@@ -1,5 +1,10 @@
 export type { AuthContextType } from './contextsInterfaces/AuthContextType';
 export type { AuthUser } from './userInterfaces/AuthUser';
+export type { ConvenioFormValues } from './convenioInterfaces/ConvenioFormValues';
+export type { ConvenioRead } from './convenioInterfaces/ConvenioRead';
+export type { ConveniosPagination } from './convenioInterfaces/ConveniosPagination';
+export type { DocConvenioFormValues } from './docConvenioInterfaces/DocConvenioFormValues';
+export type { DocConvenioRead } from './docConvenioInterfaces/DocConvenioRead';
 export type { ExternalLoginPayload } from './authInterfaces/ExternalLoginPayload';
 export type { LoginPayload } from './authInterfaces/LoginPayload';
 export type { LoginResponse } from './authInterfaces/LoginResponse';

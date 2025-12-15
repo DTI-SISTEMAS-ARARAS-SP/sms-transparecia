@@ -11,13 +11,13 @@ const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
 export function ThemeModeProvider({ children }: { children: ReactNode }) {
   const storedMode =
-    (localStorage.getItem('themeMode') as 'light' | 'dark') || 'light';
+    (localStorage.getItem('theme-mode') as 'light' | 'dark') || 'light';
   const [mode, setMode] = useState<'light' | 'dark'>(storedMode);
 
   const toggleTheme = () => {
     setMode((prev) => {
       const newMode = prev === 'light' ? 'dark' : 'light';
-      localStorage.setItem('themeMode', newMode);
+      localStorage.setItem('theme-mode', newMode);
       return newMode;
     });
   };

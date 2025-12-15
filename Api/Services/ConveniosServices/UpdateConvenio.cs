@@ -51,6 +51,9 @@ namespace Api.Services.ConveniosServices
       convenio.Status = dto.Status ?? convenio.Status;
       convenio.UpdatedAt = DateTime.UtcNow;
 
+      // Validar período de vigência após atualização
+      ValidateDateRange.EnsureValidPeriod(convenio.DataVigenciaInicio, convenio.DataVigenciaFim);
+
       await _convenioRepo.UpdateAsync(convenio);
 
       await _createSystemLog.ExecuteAsync(LogActionDescribe.Update("Convenio", convenio.Id));

@@ -6,16 +6,18 @@ export const defineTheme = (mode: 'light' | 'dark') =>
       mode,
       ...(mode === 'light'
         ? {
-            // 🎨 Cores do modo claro
-            primary: { main: '#198a0fff' },
+            // Cores do modo claro
+            primary: { main: '#1976d2' },
+            secondary: { main: '#2e7d32' },
             background: { default: '#f5f5f5', paper: '#fff' },
-            text: { primary: '#000', secondary: '#333' },
+            text: { primary: '#000', secondary: '#555' },
           }
         : {
-            // 🌙 Cores do modo escuro
-            primary: { main: '#b6f990ff' },
+            // Cores do modo escuro
+            primary: { main: '#90caf9' },
+            secondary: { main: '#66bb6a' },
             background: { default: '#121212', paper: '#1e1e1e' },
-            text: { primary: '#fff', secondary: '#ccc' },
+            text: { primary: '#fff', secondary: '#aaa' },
           }),
     },
     typography: {
