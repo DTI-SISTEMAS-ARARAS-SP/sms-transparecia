@@ -1,0 +1,286 @@
+diff --git a/Api/Services/ConveniosServices/GetAllConvenios.cs b/Api/Services/ConveniosServices/GetAllConvenios.cs
+index 251fe2b..e210409 100644
+--- a/Api/Services/ConveniosServices/GetAllConvenios.cs
++++ b/Api/Services/ConveniosServices/GetAllConvenios.cs
+@@ -19,7 +19,6 @@ namespace Api.Services.ConveniosServices
+     {
+       var query = _convenioRepo.Query()
+         .Include(c => c.Documentos)
+-        .Where(c => c.Status)
+         .OrderByDescending(c => c.CreatedAt);
+ 
+       var paginatedConvenios = await ApplyPagination.PaginateAsync(query, page, pageSize);
+diff --git a/WebApp/src/components/AuthUserDisplay/index.tsx b/WebApp/src/components/AuthUserDisplay/index.tsx
+index 22685c3..0381e4c 100644
+--- a/WebApp/src/components/AuthUserDisplay/index.tsx
++++ b/WebApp/src/components/AuthUserDisplay/index.tsx
+@@ -1,5 +1,5 @@
+-import { Avatar, Box, Typography } from '@mui/material';
+-import { useAuth } from '../../hooks';
++import { Avatar, Box, Typography } from "@mui/material";
++import { useAuth } from "../../hooks";
+ 
+ interface AuthUserDisplayProps {
+   collapsed?: boolean;
+@@ -7,21 +7,21 @@ interface AuthUserDisplayProps {
+ 
+ export default function AuthUserDisplay(collapsed: AuthUserDisplayProps) {
+   const { authUser } = useAuth();
+-  const firstName = authUser?.fullName.split(' ')[0];
++  const firstName = authUser?.fullName.split(" ")[0];
+ 
+   return (
+     <Box
+       sx={{
+-        display: 'flex',
+-        alignItems: 'center',
++        display: "flex",
++        alignItems: "center",
+         gap: 2,
+         p: 2,
+-        borderBottom: '1px solid rgba(0,0,0,0.1)',
++        borderBottom: "1px solid rgba(0,0,0,0.1)",
+         opacity: collapsed.collapsed ? 0 : 1,
+-        transition: 'opacity 0.3s',
++        transition: "opacity 0.3s",
+       }}
+     >
+-      <Avatar sx={{ bgcolor: 'primary.main' }}>
++      <Avatar sx={{ bgcolor: "primary.main" }}>
+         {firstName?.charAt(0).toUpperCase()}
+       </Avatar>
+       <Box>
+@@ -29,6 +29,13 @@ export default function AuthUserDisplay(collapsed: AuthUserDisplayProps) {
+         <Typography variant="body2" color="text.secondary">
+           {authUser?.username}
+         </Typography>
++        <Typography
++          variant="body2"
++          color="text.secondary"
++          sx={{ fontSize: 12 }}
++        >
++          Prefeitura de Araras
++        </Typography>
+       </Box>
+     </Box>
+   );
+diff --git a/WebApp/src/components/ConveniosTable/index.tsx b/WebApp/src/components/ConveniosTable/index.tsx
+index 8f3c9bb..6fa64d4 100644
+--- a/WebApp/src/components/ConveniosTable/index.tsx
++++ b/WebApp/src/components/ConveniosTable/index.tsx
+@@ -148,13 +148,15 @@ export default function ConveniosTable({
+                     >
+                       <AttachFile />
+                     </IconButton>
+-                    <IconButton
+-                      color="error"
+-                      onClick={() => onDelete(convenio.id)}
+-                      size="small"
+-                    >
+-                      <Delete />
+-                    </IconButton>
++                    {convenio.status !== false && (
++                      <IconButton
++                        color="error"
++                        onClick={() => onDelete(convenio.id)}
++                        size="small"
++                      >
++                        <Delete />
++                      </IconButton>
++                    )}
+                   </TableCell>
+                 </TableRow>
+               ))
+diff --git a/WebApp/src/components/ReportsTable/index.tsx b/WebApp/src/components/ReportsTable/index.tsx
+index 7700148..8403ac0 100644
+--- a/WebApp/src/components/ReportsTable/index.tsx
++++ b/WebApp/src/components/ReportsTable/index.tsx
+@@ -1,4 +1,4 @@
+-import React, { useEffect } from 'react';
++import React, { useEffect } from "react";
+ import {
+   Table,
+   TableBody,
+@@ -10,10 +10,10 @@ import {
+   TablePagination,
+   Typography,
+   Box,
+-} from '@mui/material';
++} from "@mui/material";
+ 
+-import type { SystemLog, SystemLogFiltersPayload } from '../../interfaces';
+-import { useReports } from '../../hooks/useReports';
++import type { SystemLog, SystemLogFiltersPayload } from "../../interfaces";
++import { useReports } from "../../hooks/useReports";
+ 
+ interface ReportsTableProps {
+   filters: SystemLogFiltersPayload;
+diff --git a/WebApp/src/components/SidePanel/index.tsx b/WebApp/src/components/SidePanel/index.tsx
+index e2d9b6b..9c13483 100644
+--- a/WebApp/src/components/SidePanel/index.tsx
++++ b/WebApp/src/components/SidePanel/index.tsx
+@@ -7,13 +7,13 @@ import {
+   ListItemIcon,
+   ListItemText,
+   Tooltip,
+-} from '@mui/material';
+-import { useLocation } from 'react-router-dom';
+-import AuthUserDisplay from '../AuthUserDisplay';
+-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+-import { useAuth } from '../../hooks';
+-import { filterMenuByPermissions } from '../../permissions';
++} from "@mui/material";
++import { useLocation } from "react-router-dom";
++import AuthUserDisplay from "../AuthUserDisplay";
++import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
++import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
++import { useAuth } from "../../hooks";
++import { filterMenuByPermissions } from "../../permissions";
+ 
+ interface SidePanelProps {
+   open: boolean;
+@@ -38,26 +38,25 @@ export default function SidePanel({ open, onNavigate }: SidePanelProps) {
+       sx={{
+         width: drawerWidth,
+         flexShrink: 0,
+-        whiteSpace: 'nowrap',
++        whiteSpace: "nowrap",
+         transition: (theme) =>
+-          theme.transitions.create('width', {
++          theme.transitions.create("width", {
+             easing: theme.transitions.easing.sharp,
+             duration: theme.transitions.duration.enteringScreen,
+           }),
+-        '& .MuiDrawer-paper': {
++        "& .MuiDrawer-paper": {
+           width: drawerWidth,
+           transition: (theme) =>
+-            theme.transitions.create('width', {
++            theme.transitions.create("width", {
+               easing: theme.transitions.easing.sharp,
+               duration: theme.transitions.duration.enteringScreen,
+             }),
+-          overflowX: 'hidden',
++          overflowX: "hidden",
+         },
+       }}
+     >
+-      <Box sx={{ overflow: 'hidden' }}>
++      <Box sx={{ overflow: "hidden" }}>
+         <AuthUserDisplay collapsed={!open} />
+-
+         <List>
+           {filteredMenu.map((item) => {
+             const isActive = location.pathname === item.route;
+@@ -74,9 +73,9 @@ export default function SidePanel({ open, onNavigate }: SidePanelProps) {
+                     onClick={() => onNavigate(item.route)}
+                     sx={{
+                       backgroundColor: isActive
+-                        ? 'rgba(25, 210, 50, 0.6)'
+-                        : 'transparent',
+-                      '&:hover': { backgroundColor: 'rgba(25, 210, 50, 0.6)' },
++                        ? "rgba(25, 210, 50, 0.6)"
++                        : "transparent",
++                      "&:hover": { backgroundColor: "rgba(25, 210, 50, 0.6)" },
+                     }}
+                   >
+                     <ListItemIcon>
+@@ -86,8 +85,8 @@ export default function SidePanel({ open, onNavigate }: SidePanelProps) {
+                       primary={item.label}
+                       sx={{
+                         opacity: open ? 1 : 0,
+-                        transition: 'opacity 0.3s',
+-                        whiteSpace: 'nowrap',
++                        transition: "opacity 0.3s",
++                        whiteSpace: "nowrap",
+                       }}
+                     />
+                   </ListItemButton>
+@@ -106,7 +105,7 @@ export default function SidePanel({ open, onNavigate }: SidePanelProps) {
+               <ListItemButton
+                 onClick={() => {
+                   handleLogout();
+-                  onNavigate('/login');
++                  onNavigate("/login");
+                 }}
+               >
+                 <ListItemIcon>
+@@ -116,8 +115,8 @@ export default function SidePanel({ open, onNavigate }: SidePanelProps) {
+                   primary="Sair"
+                   sx={{
+                     opacity: open ? 1 : 0,
+-                    transition: 'opacity 0.3s',
+-                    whiteSpace: 'nowrap',
++                    transition: "opacity 0.3s",
++                    whiteSpace: "nowrap",
+                   }}
+                 />
+               </ListItemButton>
+diff --git a/WebApp/src/components/UsersTable/index.tsx b/WebApp/src/components/UsersTable/index.tsx
+index 3178276..b2427b0 100644
+--- a/WebApp/src/components/UsersTable/index.tsx
++++ b/WebApp/src/components/UsersTable/index.tsx
+@@ -1,4 +1,4 @@
+-import React, { useEffect, useState } from 'react';
++import React, { useEffect, useState } from "react";
+ import {
+   Table,
+   TableBody,
+@@ -12,11 +12,12 @@ import {
+   Typography,
+   Box,
+   TextField,
+-} from '@mui/material';
+-import { Edit, Delete, Search } from '@mui/icons-material';
++} from "@mui/material";
++import { Edit, Delete, Search } from "@mui/icons-material";
+ 
+-import type { UserRead } from '../../interfaces';
+-import { useUsers } from '../../hooks';
++import type { UserRead } from "../../interfaces";
++import { useUsers } from "../../hooks";
++import { formatDate } from "../../helpers";
+ 
+ interface UsersTableProps {
+   onEdit: (user: UserRead) => void;
+@@ -24,13 +25,23 @@ interface UsersTableProps {
+   refreshTrigger?: number;
+ }
+ 
+-export default function UsersTable({ onEdit, onDelete, refreshTrigger }: UsersTableProps) {
++export default function UsersTable({
++  onEdit,
++  onDelete,
++  refreshTrigger,
++}: UsersTableProps) {
+   const { users, pagination, loading, fetchUsers, setPagination } = useUsers();
+-  const [searchKey, setSearchKey] = useState('');
++  const [searchKey, setSearchKey] = useState("");
+ 
+   useEffect(() => {
+     fetchUsers(pagination.page, pagination.pageSize, searchKey);
+-  }, [fetchUsers, pagination.page, pagination.pageSize, searchKey, refreshTrigger]);
++  }, [
++    fetchUsers,
++    pagination.page,
++    pagination.pageSize,
++    searchKey,
++    refreshTrigger,
++  ]);
+ 
+   const handleChangePage = (_: unknown, newPage: number) => {
+     setPagination((prev) => ({ ...prev, page: newPage + 1 }));
+@@ -104,10 +115,10 @@ export default function UsersTable({ onEdit, onDelete, refreshTrigger }: UsersTa
+                   <TableCell>{user.email}</TableCell>
+                   <TableCell>{user.fullName}</TableCell>
+                   <TableCell>
+-                    {new Date(user.createdAt).toLocaleString()}
++                    {formatDate(new Date(user.createdAt).toLocaleString())}
+                   </TableCell>
+                   <TableCell>
+-                    {new Date(user.updatedAt).toLocaleString()}
++                    {formatDate(new Date(user.updatedAt).toLocaleString())}
+                   </TableCell>
+                   <TableCell align="right">
+                     <IconButton color="primary" onClick={() => onEdit(user)}>

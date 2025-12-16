@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -10,10 +10,10 @@ import {
   TablePagination,
   Typography,
   Box,
-} from '@mui/material';
+} from "@mui/material";
 
-import type { SystemLog, SystemLogFiltersPayload } from '../../interfaces';
-import { useReports } from '../../hooks/useReports';
+import type { SystemLog, SystemLogFiltersPayload } from "../../interfaces";
+import { useReports } from "../../hooks/useReports";
 
 interface ReportsTableProps {
   filters: SystemLogFiltersPayload;

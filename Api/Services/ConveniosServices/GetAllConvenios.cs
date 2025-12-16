@@ -19,7 +19,6 @@ namespace Api.Services.ConveniosServices
     {
       var query = _convenioRepo.Query()
         .Include(c => c.Documentos)
-        .Where(c => c.Status)
         .OrderByDescending(c => c.CreatedAt);
 
       var paginatedConvenios = await ApplyPagination.PaginateAsync(query, page, pageSize);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -12,11 +12,12 @@ import {
   Typography,
   Box,
   TextField,
-} from '@mui/material';
-import { Edit, Delete, Search } from '@mui/icons-material';
+} from "@mui/material";
+import { Edit, Delete, Search } from "@mui/icons-material";
 
-import type { UserRead } from '../../interfaces';
-import { useUsers } from '../../hooks';
+import type { UserRead } from "../../interfaces";
+import { useUsers } from "../../hooks";
+import { formatDate } from "../../helpers";
 
 interface UsersTableProps {
   onEdit: (user: UserRead) => void;
@@ -24,13 +25,23 @@ interface UsersTableProps {
   refreshTrigger?: number;
 }
 
-export default function UsersTable({ onEdit, onDelete, refreshTrigger }: UsersTableProps) {
+export default function UsersTable({
+  onEdit,
+  onDelete,
+  refreshTrigger,
+}: UsersTableProps) {
   const { users, pagination, loading, fetchUsers, setPagination } = useUsers();
-  const [searchKey, setSearchKey] = useState('');
+  const [searchKey, setSearchKey] = useState("");
 
   useEffect(() => {
     fetchUsers(pagination.page, pagination.pageSize, searchKey);
-  }, [fetchUsers, pagination.page, pagination.pageSize, searchKey, refreshTrigger]);
+  }, [
+    fetchUsers,
+    pagination.page,
+    pagination.pageSize,
+    searchKey,
+    refreshTrigger,
+  ]);
 
   const handleChangePage = (_: unknown, newPage: number) => {
     setPagination((prev) => ({ ...prev, page: newPage + 1 }));
@@ -104,10 +115,10 @@ export default function UsersTable({ onEdit, onDelete, refreshTrigger }: UsersTa
                   <TableCell>{user.email}</TableCell>
                   <TableCell>{user.fullName}</TableCell>
                   <TableCell>
-                    {new Date(user.createdAt).toLocaleString()}
+                    {formatDate(new Date(user.createdAt).toLocaleString())}
                   </TableCell>
                   <TableCell>
-                    {new Date(user.updatedAt).toLocaleString()}
+                    {formatDate(new Date(user.updatedAt).toLocaleString())}
                   </TableCell>
                   <TableCell align="right">
                     <IconButton color="primary" onClick={() => onEdit(user)}>

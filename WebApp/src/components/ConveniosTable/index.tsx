@@ -148,13 +148,15 @@ export default function ConveniosTable({
                     >
                       <AttachFile />
                     </IconButton>
-                    <IconButton
-                      color="error"
-                      onClick={() => onDelete(convenio.id)}
-                      size="small"
-                    >
-                      <Delete />
-                    </IconButton>
+                    {convenio.status !== false && (
+                      <IconButton
+                        color="error"
+                        onClick={() => onDelete(convenio.id)}
+                        size="small"
+                      >
+                        <Delete />
+                      </IconButton>
+                    )}
                   </TableCell>
                 </TableRow>
               ))

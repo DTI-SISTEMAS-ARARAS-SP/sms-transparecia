@@ -7,13 +7,13 @@ import {
   ListItemIcon,
   ListItemText,
   Tooltip,
-} from '@mui/material';
-import { useLocation } from 'react-router-dom';
-import AuthUserDisplay from '../AuthUserDisplay';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import { useAuth } from '../../hooks';
-import { filterMenuByPermissions } from '../../permissions';
+} from "@mui/material";
+import { useLocation } from "react-router-dom";
+import AuthUserDisplay from "../AuthUserDisplay";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "../../hooks";
+import { filterMenuByPermissions } from "../../permissions";
 
 interface SidePanelProps {
   open: boolean;
@@ -38,26 +38,25 @@ export default function SidePanel({ open, onNavigate }: SidePanelProps) {
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        whiteSpace: 'nowrap',
+        whiteSpace: "nowrap",
         transition: (theme) =>
-          theme.transitions.create('width', {
+          theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
           }),
-        '& .MuiDrawer-paper': {
+        "& .MuiDrawer-paper": {
           width: drawerWidth,
           transition: (theme) =>
-            theme.transitions.create('width', {
+            theme.transitions.create("width", {
               easing: theme.transitions.easing.sharp,
               duration: theme.transitions.duration.enteringScreen,
             }),
-          overflowX: 'hidden',
+          overflowX: "hidden",
         },
       }}
     >
-      <Box sx={{ overflow: 'hidden' }}>
+      <Box sx={{ overflow: "hidden" }}>
         <AuthUserDisplay collapsed={!open} />
-
         <List>
           {filteredMenu.map((item) => {
             const isActive = location.pathname === item.route;
@@ -74,9 +73,9 @@ export default function SidePanel({ open, onNavigate }: SidePanelProps) {
                     onClick={() => onNavigate(item.route)}
                     sx={{
                       backgroundColor: isActive
-                        ? 'rgba(25, 210, 50, 0.6)'
-                        : 'transparent',
-                      '&:hover': { backgroundColor: 'rgba(25, 210, 50, 0.6)' },
+                        ? "rgba(25, 210, 50, 0.6)"
+                        : "transparent",
+                      "&:hover": { backgroundColor: "rgba(25, 210, 50, 0.6)" },
                     }}
                   >
                     <ListItemIcon>
@@ -86,8 +85,8 @@ export default function SidePanel({ open, onNavigate }: SidePanelProps) {
                       primary={item.label}
                       sx={{
                         opacity: open ? 1 : 0,
-                        transition: 'opacity 0.3s',
-                        whiteSpace: 'nowrap',
+                        transition: "opacity 0.3s",
+                        whiteSpace: "nowrap",
                       }}
                     />
                   </ListItemButton>
@@ -106,7 +105,7 @@ export default function SidePanel({ open, onNavigate }: SidePanelProps) {
               <ListItemButton
                 onClick={() => {
                   handleLogout();
-                  onNavigate('/login');
+                  onNavigate("/login");
                 }}
               >
                 <ListItemIcon>
@@ -116,8 +115,8 @@ export default function SidePanel({ open, onNavigate }: SidePanelProps) {
                   primary="Sair"
                   sx={{
                     opacity: open ? 1 : 0,
-                    transition: 'opacity 0.3s',
-                    whiteSpace: 'nowrap',
+                    transition: "opacity 0.3s",
+                    whiteSpace: "nowrap",
                   }}
                 />
               </ListItemButton>
