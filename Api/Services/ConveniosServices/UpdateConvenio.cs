@@ -64,7 +64,14 @@ namespace Api.Services.ConveniosServices
 
       await _createSystemLog.ExecuteAsync(LogActionDescribe.Update("Convenio", convenio.Id));
 
-      return ConvenioMapper.MapToConvenioReadDto(convenio);
+      // Recarregar com documentos para retornar
+      var convenioAtualizado = await _convenioRepo.Query()
+        .Include(c => c.Documentos)
+        .FirstOrDefaultAsync(c => c.Id == id);
+
+      return convenioAtualizado != null
+        ? ConvenioMapper.MapToConvenioReadDto(convenioAtualizado)
+        : null;
     }
   }
 }

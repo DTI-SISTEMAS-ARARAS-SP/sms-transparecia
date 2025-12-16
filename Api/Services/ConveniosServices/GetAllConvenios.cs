@@ -18,12 +18,19 @@ namespace Api.Services.ConveniosServices
     public async Task<PaginatedResult<ConvenioReadDto>> ExecuteAsync(int page = 1, int pageSize = 10)
     {
       var query = _convenioRepo.Query()
+        .Include(c => c.Documentos)
         .Where(c => c.Status)
-        .OrderByDescending(c => c.CreatedAt)
-        .Select(c => ConvenioMapper.MapToConvenioReadDto(c));
+        .OrderByDescending(c => c.CreatedAt);
 
       var paginatedConvenios = await ApplyPagination.PaginateAsync(query, page, pageSize);
-      return paginatedConvenios;
+
+      return new PaginatedResult<ConvenioReadDto>
+      {
+        Data = paginatedConvenios.Data.Select(c => ConvenioMapper.MapToConvenioReadDto(c)).ToList(),
+        Page = paginatedConvenios.Page,
+        PageSize = paginatedConvenios.PageSize,
+        TotalItems = paginatedConvenios.TotalItems
+      };
     }
   }
 }

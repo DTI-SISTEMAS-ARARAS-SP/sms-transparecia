@@ -1,3 +1,5 @@
+import { DocConvenioRead } from '../docConvenioInterfaces/DocConvenioRead';
+
 export interface ConvenioRead {
   id: number;
   numeroConvenio: string;
@@ -11,4 +13,6 @@ export interface ConvenioRead {
   createdByUserId: number;
   createdAt: string;
   updatedAt: string;
+  totalDocumentos: number;
+  documentos?: DocConvenioRead[];
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   Box,
   Paper,
@@ -12,10 +12,10 @@ import {
   TextField,
   Typography,
   IconButton,
-} from '@mui/material';
-import { Edit, Delete, AttachFile, Search } from '@mui/icons-material';
-import { useConvenios } from '../../hooks';
-import { formatDate, formatStatus } from '../../helpers';
+} from "@mui/material";
+import { Edit, Delete, AttachFile, Search } from "@mui/icons-material";
+import { useConvenios } from "../../hooks";
+import { formatDate, formatStatus } from "../../helpers";
 
 interface Props {
   onEdit: (convenio: any) => void;
@@ -24,13 +24,25 @@ interface Props {
   refreshTrigger?: number;
 }
 
-export default function ConveniosTable({ onEdit, onDelete, onManageDocs, refreshTrigger }: Props) {
-  const [searchKey, setSearchKey] = useState('');
-  const { convenios, pagination, loading, fetchConvenios, setPagination } = useConvenios();
+export default function ConveniosTable({
+  onEdit,
+  onDelete,
+  onManageDocs,
+  refreshTrigger,
+}: Props) {
+  const [searchKey, setSearchKey] = useState("");
+  const { convenios, pagination, loading, fetchConvenios, setPagination } =
+    useConvenios();
 
   useEffect(() => {
     fetchConvenios(pagination.page, pagination.pageSize, searchKey);
-  }, [fetchConvenios, pagination.page, pagination.pageSize, searchKey, refreshTrigger]);
+  }, [
+    fetchConvenios,
+    pagination.page,
+    pagination.pageSize,
+    searchKey,
+    refreshTrigger,
+  ]);
 
   function handleSearchSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -51,12 +63,12 @@ export default function ConveniosTable({ onEdit, onDelete, onManageDocs, refresh
   }
 
   return (
-    <Paper sx={{ p: 2, width: '100%', maxWidth: 1200 }}>
+    <Paper sx={{ p: 2, width: "100%", maxWidth: 1200 }}>
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
           mb: 2,
         }}
       >
@@ -64,7 +76,7 @@ export default function ConveniosTable({ onEdit, onDelete, onManageDocs, refresh
         <Box
           component="form"
           onSubmit={handleSearchSubmit}
-          sx={{ display: 'flex', alignItems: 'center' }}
+          sx={{ display: "flex", alignItems: "center" }}
         >
           <TextField
             size="small"
@@ -95,13 +107,14 @@ export default function ConveniosTable({ onEdit, onDelete, onManageDocs, refresh
               <TableCell>Vigência Início</TableCell>
               <TableCell>Vigência Fim</TableCell>
               <TableCell>Status</TableCell>
+              <TableCell align="center">Documentos</TableCell>
               <TableCell align="right">Ações</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={8} align="center">
+                <TableCell colSpan={9} align="center">
                   Carregando...
                 </TableCell>
               </TableRow>
@@ -112,9 +125,14 @@ export default function ConveniosTable({ onEdit, onDelete, onManageDocs, refresh
                   <TableCell>{convenio.numeroConvenio}</TableCell>
                   <TableCell>{convenio.titulo}</TableCell>
                   <TableCell>{convenio.orgaoConcedente}</TableCell>
-                  <TableCell>{formatDate(convenio.dataVigenciaInicio)}</TableCell>
+                  <TableCell>
+                    {formatDate(convenio.dataVigenciaInicio)}
+                  </TableCell>
                   <TableCell>{formatDate(convenio.dataVigenciaFim)}</TableCell>
                   <TableCell>{formatStatus(convenio.status)}</TableCell>
+                  <TableCell align="center">
+                    {convenio.totalDocumentos}
+                  </TableCell>
                   <TableCell align="right">
                     <IconButton
                       color="primary"
@@ -142,7 +160,7 @@ export default function ConveniosTable({ onEdit, onDelete, onManageDocs, refresh
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={8} align="center">
+                <TableCell colSpan={9} align="center">
                   Nenhum convênio encontrado
                 </TableCell>
               </TableRow>

@@ -2,6 +2,7 @@ using Api.Dtos;
 using Api.Helpers;
 using Api.Interfaces;
 using Api.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Api.Services.ConveniosServices
 {
@@ -16,11 +17,14 @@ namespace Api.Services.ConveniosServices
 
     public async Task<ConvenioReadDto?> ExecuteAsync(int id)
     {
-      var convenio = await _convenioRepo.GetByIdAsync(id);
+      var convenio = await _convenioRepo.Query()
+        .Include(c => c.Documentos)
+        .FirstOrDefaultAsync(c => c.Id == id);
+
       if (convenio == null)
         return null;
 
-      return ConvenioMapper.MapToConvenioReadDto(convenio);
+      return ConvenioMapper.MapToConvenioReadDto(convenio, includeDocumentos: true);
     }
   }
 }

@@ -14,5 +14,7 @@ namespace Api.Dtos
     public int CreatedByUserId { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
+    public int TotalDocumentos { get; set; }
+    public List<DocConvenioReadDto>? Documentos { get; set; }
   }
 }
