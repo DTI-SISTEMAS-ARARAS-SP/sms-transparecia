@@ -43,9 +43,15 @@ namespace Api.Services.ConveniosServices
         Titulo = dto.Titulo,
         Descricao = dto.Descricao,
         OrgaoConcedente = dto.OrgaoConcedente,
-        DataPublicacaoDiario = dto.DataPublicacaoDiario,
-        DataVigenciaInicio = dto.DataVigenciaInicio,
-        DataVigenciaFim = dto.DataVigenciaFim,
+        DataPublicacaoDiario = dto.DataPublicacaoDiario.HasValue
+          ? DateTime.SpecifyKind(dto.DataPublicacaoDiario.Value, DateTimeKind.Utc)
+          : null,
+        DataVigenciaInicio = dto.DataVigenciaInicio.HasValue
+          ? DateTime.SpecifyKind(dto.DataVigenciaInicio.Value, DateTimeKind.Utc)
+          : null,
+        DataVigenciaFim = dto.DataVigenciaFim.HasValue
+          ? DateTime.SpecifyKind(dto.DataVigenciaFim.Value, DateTimeKind.Utc)
+          : null,
         Status = dto.Status,
         CreatedByUserId = _currentAuthUser.GetId(),
         CreatedAt = DateTime.UtcNow,

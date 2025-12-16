@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import {
+  Convenios,
   Login,
   PasswordReset,
   Profile,
@@ -36,7 +37,7 @@ const privateRoutes = [
   },
   {
     path: "/convenios",
-    element: <div>Convenios</div>,
+    element: <Convenios />,
     requiredPermission: PermissionsMap.CONVENIOS,
   },
 ];

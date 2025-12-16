@@ -10,9 +10,23 @@ export async function downloadDocConvenio(id: number) {
   let filename = 'documento.pdf';
 
   if (contentDisposition) {
-    const filenameMatch = contentDisposition.match(/filename="?(.+)"?/);
-    if (filenameMatch && filenameMatch[1]) {
-      filename = filenameMatch[1];
+    // Tenta vários formatos de Content-Disposition
+    // Formato 1: filename="arquivo.pdf"
+    // Formato 2: filename=arquivo.pdf
+    // Formato 3: attachment; filename="arquivo.pdf"
+    // Formato 4: filename*=UTF-8''arquivo.pdf
+
+    const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+    const matches = filenameRegex.exec(contentDisposition);
+
+    if (matches != null && matches[1]) {
+      filename = matches[1].replace(/['"]/g, '');
+    } else {
+      // Fallback: tenta pegar qualquer coisa após filename=
+      const simpleMatch = contentDisposition.match(/filename[*]?=['"]?([^;\r\n"']*)/);
+      if (simpleMatch && simpleMatch[1]) {
+        filename = decodeURIComponent(simpleMatch[1]);
+      }
     }
   }
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -6,16 +6,16 @@ import {
   Alert,
   FormControlLabel,
   Checkbox,
-} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks';
-import { getErrorMessage } from '../../helpers';
-import type { LoginPayload } from '../../interfaces';
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks";
+import { getErrorMessage } from "../../helpers";
+import type { LoginPayload } from "../../interfaces";
 
 export default function LoginForm() {
   const [form, setForm] = useState<LoginPayload>({
-    identifier: '',
-    password: '',
+    identifier: "",
+    password: "",
   });
 
   const [rememberMe, setRememberMe] = useState(false);
@@ -26,7 +26,7 @@ export default function LoginForm() {
   const { handleLogin } = useAuth();
 
   useEffect(() => {
-    const savedIdentifier = localStorage.getItem('identifier');
+    const savedIdentifier = localStorage.getItem("identifier");
     if (savedIdentifier) {
       setForm((prev) => ({ ...prev, identifier: savedIdentifier }));
       setRememberMe(true);
@@ -50,12 +50,12 @@ export default function LoginForm() {
       await handleLogin(form);
 
       if (rememberMe) {
-        localStorage.setItem('identifier', form.identifier);
+        localStorage.setItem("identifier", form.identifier);
       } else {
-        localStorage.removeItem('identifier');
+        localStorage.removeItem("identifier");
       }
 
-      navigate('/profile');
+      navigate("/convenios");
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -67,7 +67,7 @@ export default function LoginForm() {
     <Box
       component="form"
       onSubmit={handleSubmit}
-      sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+      sx={{ display: "flex", flexDirection: "column", gap: 2 }}
     >
       {error && <Alert severity="error">{error}</Alert>}
 
@@ -105,7 +105,7 @@ export default function LoginForm() {
         color="primary"
         disabled={loading}
       >
-        {loading ? 'Entrando...' : 'Entrar'}
+        {loading ? "Entrando..." : "Entrar"}
       </Button>
     </Box>
   );

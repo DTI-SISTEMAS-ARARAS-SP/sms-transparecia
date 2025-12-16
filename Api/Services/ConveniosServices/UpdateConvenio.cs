@@ -45,9 +45,15 @@ namespace Api.Services.ConveniosServices
       convenio.Titulo = dto.Titulo ?? convenio.Titulo;
       convenio.Descricao = dto.Descricao ?? convenio.Descricao;
       convenio.OrgaoConcedente = dto.OrgaoConcedente ?? convenio.OrgaoConcedente;
-      convenio.DataPublicacaoDiario = dto.DataPublicacaoDiario ?? convenio.DataPublicacaoDiario;
-      convenio.DataVigenciaInicio = dto.DataVigenciaInicio ?? convenio.DataVigenciaInicio;
-      convenio.DataVigenciaFim = dto.DataVigenciaFim ?? convenio.DataVigenciaFim;
+      convenio.DataPublicacaoDiario = dto.DataPublicacaoDiario.HasValue
+        ? DateTime.SpecifyKind(dto.DataPublicacaoDiario.Value, DateTimeKind.Utc)
+        : convenio.DataPublicacaoDiario;
+      convenio.DataVigenciaInicio = dto.DataVigenciaInicio.HasValue
+        ? DateTime.SpecifyKind(dto.DataVigenciaInicio.Value, DateTimeKind.Utc)
+        : convenio.DataVigenciaInicio;
+      convenio.DataVigenciaFim = dto.DataVigenciaFim.HasValue
+        ? DateTime.SpecifyKind(dto.DataVigenciaFim.Value, DateTimeKind.Utc)
+        : convenio.DataVigenciaFim;
       convenio.Status = dto.Status ?? convenio.Status;
       convenio.UpdatedAt = DateTime.UtcNow;
 

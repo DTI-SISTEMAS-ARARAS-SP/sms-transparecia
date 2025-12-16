@@ -1,4 +1,10 @@
 export { default as ActionsSelect } from './ActionsSelect';
+export { default as ConvenioDocumentsModal } from './ConvenioDocumentsModal';
+export { default as ConvenioEditionModal } from './ConvenioEditionModal';
+export { default as ConvenioForm } from './ConvenioForm';
+export { default as ConveniosTable } from './ConveniosTable';
+export { default as DocConveniosTable } from './DocConveniosTable';
+export { default as DocConvenioUpload } from './DocConvenioUpload';
 export { default as LoginForm } from './LoginForm';
 export { default as PageTitle } from './PageTitle';
 export { default as PasswordResetRequestModal } from './PasswordResetRequestModal';
