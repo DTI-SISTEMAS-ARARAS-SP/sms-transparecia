@@ -21,15 +21,16 @@ interface Props {
   onEdit: (convenio: any) => void;
   onDelete: (id: number) => void;
   onManageDocs: (convenioId: number) => void;
+  refreshTrigger?: number;
 }
 
-export default function ConveniosTable({ onEdit, onDelete, onManageDocs }: Props) {
+export default function ConveniosTable({ onEdit, onDelete, onManageDocs, refreshTrigger }: Props) {
   const [searchKey, setSearchKey] = useState('');
   const { convenios, pagination, loading, fetchConvenios, setPagination } = useConvenios();
 
   useEffect(() => {
     fetchConvenios(pagination.page, pagination.pageSize, searchKey);
-  }, [fetchConvenios, pagination.page, pagination.pageSize, searchKey]);
+  }, [fetchConvenios, pagination.page, pagination.pageSize, searchKey, refreshTrigger]);
 
   function handleSearchSubmit(e: React.FormEvent) {
     e.preventDefault();

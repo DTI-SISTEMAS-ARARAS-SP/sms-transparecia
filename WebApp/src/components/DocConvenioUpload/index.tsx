@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { Box, TextField, Button, Typography, IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import { useDocConvenios } from '../../hooks';
+import { useDocConvenios, useSnackbar } from '../../hooks';
 import { formatFileSize } from '../../helpers';
 
 interface Props {
@@ -16,6 +16,7 @@ export default function DocConvenioUpload({ convenioId, onUploadSuccess }: Props
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { uploadDocumento } = useDocConvenios();
+  const { showSnackbar } = useSnackbar();
 
   async function handleUpload() {
     if (!file || !tipoDocumento) return;
@@ -23,14 +24,14 @@ export default function DocConvenioUpload({ convenioId, onUploadSuccess }: Props
     setUploading(true);
     try {
       await uploadDocumento(convenioId, file, tipoDocumento, descricao);
-      alert('Documento enviado com sucesso!');
+      showSnackbar('Documento enviado com sucesso!', 'success');
       setFile(null);
       setTipoDocumento('');
       setDescricao('');
       onUploadSuccess();
     } catch (err) {
       console.error(err);
-      alert('Erro ao enviar documento');
+      showSnackbar('Erro ao enviar documento', 'error');
     } finally {
       setUploading(false);
     }

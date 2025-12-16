@@ -6,24 +6,27 @@ import ConveniosTable from '../../components/ConveniosTable';
 import ConvenioEditionModal from '../../components/ConvenioEditionModal';
 import ConvenioDocumentsModal from '../../components/ConvenioDocumentsModal';
 import type { ConvenioFormValues, ConvenioRead } from '../../interfaces';
-import { useConvenios } from '../../hooks';
+import { useConvenios, useSnackbar } from '../../hooks';
 import { PermissionsMap } from '../../permissions';
+import { getErrorMessage } from '../../helpers';
 
 export default function Convenios() {
-  const { fetchConvenios, addConvenio, editConvenio, removeConvenio } = useConvenios();
+  const { addConvenio, editConvenio, removeConvenio } = useConvenios();
+  const { showSnackbar } = useSnackbar();
   const [editingConvenio, setEditingConvenio] = useState<ConvenioRead | null>(null);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDocsModal, setOpenDocsModal] = useState(false);
   const [selectedConvenioId, setSelectedConvenioId] = useState<number | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   async function handleCreate(convenio: ConvenioFormValues) {
     try {
       await addConvenio(convenio);
-      alert('Convênio cadastrado com sucesso!');
-      fetchConvenios();
+      showSnackbar('Convênio cadastrado com sucesso!', 'success');
+      setRefreshTrigger(prev => prev + 1);
     } catch (err) {
       console.error(err);
-      alert('Erro ao cadastrar convênio');
+      showSnackbar(getErrorMessage(err, 'Erro ao cadastrar convênio'), 'error');
     }
   }
 
@@ -31,12 +34,12 @@ export default function Convenios() {
     if (!editingConvenio) return;
     try {
       await editConvenio(editingConvenio.id, convenio);
-      alert('Convênio atualizado com sucesso!');
+      showSnackbar('Convênio atualizado com sucesso!', 'success');
       setOpenEditModal(false);
-      fetchConvenios();
+      setRefreshTrigger(prev => prev + 1);
     } catch (err) {
       console.error(err);
-      alert('Erro ao atualizar convênio');
+      showSnackbar(getErrorMessage(err, 'Erro ao atualizar convênio'), 'error');
     }
   }
 
@@ -48,11 +51,11 @@ export default function Convenios() {
 
     try {
       await removeConvenio(id);
-      alert('Convênio excluído com sucesso!');
-      fetchConvenios();
+      showSnackbar('Convênio excluído com sucesso!', 'success');
+      setRefreshTrigger(prev => prev + 1);
     } catch (err) {
       console.error(err);
-      alert('Erro ao excluir convênio');
+      showSnackbar(getErrorMessage(err, 'Erro ao excluir convênio'), 'error');
     }
   }
 
@@ -88,6 +91,7 @@ export default function Convenios() {
         onEdit={handleOpenEditModal}
         onDelete={handleDelete}
         onManageDocs={handleOpenDocsModal}
+        refreshTrigger={refreshTrigger}
       />
 
       <ConvenioEditionModal

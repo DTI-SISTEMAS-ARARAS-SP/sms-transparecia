@@ -15,7 +15,11 @@ export function getErrorMessage(error: unknown, fallbackMessage: string = 'Erro 
 
     // Erro 403 - Proibido (sem permissão)
     if (error.response?.status === 403) {
-      return 'Você não tem permissão para realizar esta ação.';
+      const data = error.response?.data;
+      if (data && typeof data === 'object' && 'requiredPermissions' in data && 'userPermissions' in data) {
+        return `Você não tem permissão para realizar esta ação. Necessário: [${data.requiredPermissions}], Você tem: [${data.userPermissions}]`;
+      }
+      return error.response?.data?.message || 'Você não tem permissão para realizar esta ação.';
     }
 
     // Erro 404 - Não encontrado

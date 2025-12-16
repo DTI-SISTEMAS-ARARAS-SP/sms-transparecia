@@ -21,11 +21,13 @@ import { useSystemResources } from '../../hooks';
 interface SystemResourcesTableProps {
   onEdit: (resource: SystemResource) => void;
   onDelete?: (id: number) => void;
+  refreshTrigger?: number;
 }
 
 export default function SystemResourcesTable({
   onEdit,
   onDelete,
+  refreshTrigger,
 }: SystemResourcesTableProps) {
   const {
     resources,
@@ -38,7 +40,7 @@ export default function SystemResourcesTable({
 
   useEffect(() => {
     fetchSystemResources(pagination.page, pagination.pageSize, searchKey);
-  }, [fetchSystemResources, pagination.page, pagination.pageSize, searchKey]);
+  }, [fetchSystemResources, pagination.page, pagination.pageSize, searchKey, refreshTrigger]);
 
   const handleChangePage = (_: unknown, newPage: number) => {
     setPagination((prev) => ({ ...prev, page: newPage + 1 }));

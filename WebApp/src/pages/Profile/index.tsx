@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Container, Box, CircularProgress, Alert } from '@mui/material';
 import { PageTitle, UserForm } from '../../components';
-import { useAuth, useUsers } from '../../hooks';
+import { useAuth, useUsers, useSnackbar } from '../../hooks';
 import type { UserFormValues, UserRead } from '../../interfaces';
 
 export default function Profile() {
   const { authUser } = useAuth();
   const { editUser, fetchUserById, loading, error } = useUsers();
+  const { showSnackbar } = useSnackbar();
 
   const [userData, setUserData] = useState<UserRead | null>(null);
 
@@ -22,10 +23,10 @@ export default function Profile() {
     if (!authUser?.id) return;
     try {
       await editUser({ ...formData, id: authUser.id });
-      alert('✅ Perfil atualizado com sucesso!');
+      showSnackbar('Perfil atualizado com sucesso!', 'success');
     } catch (err) {
       console.error(err);
-      alert('❌ Erro ao atualizar perfil');
+      showSnackbar('Erro ao atualizar perfil', 'error');
     }
   }
 

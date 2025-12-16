@@ -7,22 +7,24 @@ import {
   UsersTable,
 } from '../../components';
 import type { UserFormValues, UserRead } from '../../interfaces';
-import { useUsers } from '../../hooks';
+import { useUsers, useSnackbar } from '../../hooks';
 import { PermissionsMap } from '../../permissions';
 
 export default function Users() {
-  const { fetchUsers, addUser, editUser, removeUser } = useUsers();
+  const { addUser, editUser, removeUser } = useUsers();
+  const { showSnackbar } = useSnackbar();
   const [editingUser, setEditingUser] = useState<UserRead | null>(null);
   const [open, setOpen] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   async function handleCreate(user: UserFormValues) {
     try {
       await addUser(user);
-      alert('✅ Usuário cadastrado com sucesso!');
-      fetchUsers(); // atualiza tabela
+      showSnackbar('Usuário cadastrado com sucesso!', 'success');
+      setRefreshTrigger(prev => prev + 1);
     } catch (err) {
       console.error(err);
-      alert('❌ Erro ao cadastrar usuário');
+      showSnackbar('Erro ao cadastrar usuário', 'error');
     }
   }
 
@@ -30,12 +32,12 @@ export default function Users() {
     if (!editingUser) return;
     try {
       await editUser({ ...editingUser, ...user });
-      alert('✅ Usuário atualizado com sucesso!');
+      showSnackbar('Usuário atualizado com sucesso!', 'success');
       setOpen(false);
-      fetchUsers();
+      setRefreshTrigger(prev => prev + 1);
     } catch (err) {
       console.error(err);
-      alert('❌ Erro ao atualizar usuário');
+      showSnackbar('Erro ao atualizar usuário', 'error');
     }
   }
 
@@ -47,11 +49,11 @@ export default function Users() {
 
     try {
       await removeUser(id);
-      alert('🗑️ Usuário excluído com sucesso!');
-      fetchUsers(); // atualiza tabela
+      showSnackbar('Usuário excluído com sucesso!', 'success');
+      setRefreshTrigger(prev => prev + 1);
     } catch (err) {
       console.error(err);
-      alert('❌ Erro ao excluir usuário');
+      showSnackbar('Erro ao excluir usuário', 'error');
     }
   }
 
@@ -78,7 +80,7 @@ export default function Users() {
 
       <UserForm onSubmit={handleCreate} />
 
-      <UsersTable onEdit={handleOpenEditionModal} onDelete={handleDelete} />
+      <UsersTable onEdit={handleOpenEditionModal} onDelete={handleDelete} refreshTrigger={refreshTrigger} />
 
       <UserEditionModal
         open={open}

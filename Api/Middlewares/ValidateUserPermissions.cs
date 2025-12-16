@@ -53,7 +53,16 @@ namespace Api.Middlewares
       if (requiredPermissions.Any() && !requiredPermissions.Any(rp => userPermissionIds.Contains(rp)))
       {
         context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-        await context.Response.WriteAsync("Acesso negado: você não possui permissão para este recurso.");
+        context.Response.ContentType = "application/json";
+        var errorResponse = new
+        {
+          message = "Acesso negado: você não possui permissão para este recurso.",
+          path = path,
+          method = method,
+          requiredPermissions = requiredPermissions,
+          userPermissions = userPermissionIds
+        };
+        await context.Response.WriteAsync(JsonSerializer.Serialize(errorResponse));
         return;
       }
 

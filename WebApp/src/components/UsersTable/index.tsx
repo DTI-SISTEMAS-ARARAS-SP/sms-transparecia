@@ -21,15 +21,16 @@ import { useUsers } from '../../hooks';
 interface UsersTableProps {
   onEdit: (user: UserRead) => void;
   onDelete?: (id: number) => void;
+  refreshTrigger?: number;
 }
 
-export default function UsersTable({ onEdit, onDelete }: UsersTableProps) {
+export default function UsersTable({ onEdit, onDelete, refreshTrigger }: UsersTableProps) {
   const { users, pagination, loading, fetchUsers, setPagination } = useUsers();
   const [searchKey, setSearchKey] = useState('');
 
   useEffect(() => {
     fetchUsers(pagination.page, pagination.pageSize, searchKey);
-  }, [fetchUsers, pagination.page, pagination.pageSize, searchKey]);
+  }, [fetchUsers, pagination.page, pagination.pageSize, searchKey, refreshTrigger]);
 
   const handleChangePage = (_: unknown, newPage: number) => {
     setPagination((prev) => ({ ...prev, page: newPage + 1 }));

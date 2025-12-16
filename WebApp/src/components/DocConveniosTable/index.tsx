@@ -10,7 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Download, Delete } from '@mui/icons-material';
-import { useDocConvenios } from '../../hooks';
+import { useDocConvenios, useSnackbar } from '../../hooks';
 import { formatFileSize, formatDateTime } from '../../helpers';
 
 interface Props {
@@ -20,6 +20,7 @@ interface Props {
 export default function DocConveniosTable({ convenioId }: Props) {
   const { documentos, loading, fetchDocumentosByConvenio, downloadDocumento, removeDocumento } =
     useDocConvenios();
+  const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (convenioId) {
@@ -35,10 +36,10 @@ export default function DocConveniosTable({ convenioId }: Props) {
 
     try {
       await removeDocumento(id, convenioId);
-      alert('Documento excluído com sucesso!');
+      showSnackbar('Documento excluído com sucesso!', 'success');
     } catch (err) {
       console.error(err);
-      alert('Erro ao excluir documento');
+      showSnackbar('Erro ao excluir documento', 'error');
     }
   }
 
@@ -47,7 +48,7 @@ export default function DocConveniosTable({ convenioId }: Props) {
       await downloadDocumento(id);
     } catch (err) {
       console.error(err);
-      alert('Erro ao baixar documento');
+      showSnackbar('Erro ao baixar documento', 'error');
     }
   }
 

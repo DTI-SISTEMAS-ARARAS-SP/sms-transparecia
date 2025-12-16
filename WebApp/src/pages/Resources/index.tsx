@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Container } from '@mui/material';
 import type { SystemResource } from '../../interfaces';
-import { useSystemResources } from '../../hooks';
+import { useSystemResources, useSnackbar } from '../../hooks';
 import {
   SystemResourceForm,
   SystemResourcesTable,
@@ -12,26 +12,26 @@ import { PermissionsMap } from '../../permissions';
 
 export default function Resources() {
   const {
-    fetchSystemResources,
     addSystemResource,
     editSystemResource,
     removeSystemResource,
-    pagination,
   } = useSystemResources();
+  const { showSnackbar } = useSnackbar();
 
   const [editingResource, setEditingResource] = useState<SystemResource | null>(
     null
   );
   const [open, setOpen] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   async function handleCreate(resource: SystemResource) {
     try {
       await addSystemResource(resource);
-      alert('✅ Recurso criado com sucesso!');
-      fetchSystemResources(pagination.page, pagination.pageSize); // atualiza tabela
+      showSnackbar('Recurso criado com sucesso!', 'success');
+      setRefreshTrigger(prev => prev + 1);
     } catch (err) {
       console.error(err);
-      alert('❌ Erro ao criar recurso');
+      showSnackbar('Erro ao criar recurso', 'error');
     }
   }
 
@@ -39,12 +39,12 @@ export default function Resources() {
     if (!editingResource) return;
     try {
       await editSystemResource({ ...editingResource, ...resource });
-      alert('✅ Recurso atualizado com sucesso!');
+      showSnackbar('Recurso atualizado com sucesso!', 'success');
       setOpen(false);
-      fetchSystemResources(pagination.page, pagination.pageSize);
+      setRefreshTrigger(prev => prev + 1);
     } catch (err) {
       console.error(err);
-      alert('❌ Erro ao atualizar recurso');
+      showSnackbar('Erro ao atualizar recurso', 'error');
     }
   }
 
@@ -56,11 +56,11 @@ export default function Resources() {
 
     try {
       await removeSystemResource(id.toString());
-      alert('🗑️ Recurso excluído com sucesso!');
-      fetchSystemResources(pagination.page, pagination.pageSize);
+      showSnackbar('Recurso excluído com sucesso!', 'success');
+      setRefreshTrigger(prev => prev + 1);
     } catch (err) {
       console.error(err);
-      alert('❌ Erro ao excluir recurso');
+      showSnackbar('Erro ao excluir recurso', 'error');
     }
   }
 
@@ -90,6 +90,7 @@ export default function Resources() {
       <SystemResourcesTable
         onEdit={handleOpenEditionModal}
         onDelete={handleDelete}
+        refreshTrigger={refreshTrigger}
       />
 
       <SystemResourceEditionModal
