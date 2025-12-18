@@ -1,7 +1,11 @@
-import { Modal, Box, Typography, Button, Paper } from '@mui/material';
+import { Modal, Box, Typography, Paper, IconButton } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose, faEye } from '@fortawesome/free-solid-svg-icons';
 import type { SystemLog } from '../../interfaces';
+import { useEffect, useState } from 'react';
+import { detectAndFetchEntity, getErrorMessage } from '../../helpers';
+import { useNotification } from '../../hooks';
+import JsonWrapper from '../JsonWrapper';
 
 interface Props {
   open: boolean;
@@ -11,17 +15,38 @@ interface Props {
 
 function formatPayload(payload: string): string {
   try {
-    // Tenta fazer parse do JSON
     const parsed = JSON.parse(payload);
-    // Formata com indentação de 2 espaços
     return JSON.stringify(parsed, null, 2);
   } catch {
-    // Se não for JSON válido, retorna como está
     return payload;
   }
 }
 
 export default function LogDetailsModal({ open, log, onClose }: Props) {
+  const { showNotification } = useNotification();
+  const [entity, setEntity] = useState<unknown | null>(null);
+
+  useEffect(() => {
+    if (!log || !log.usedPayload || !log.action.includes('update')) {
+      setEntity(null);
+      return;
+    }
+
+    const run = async () => {
+      try {
+        const payload = JSON.parse(log.usedPayload || '');
+
+        const payloadEntity = await detectAndFetchEntity(payload);
+        setEntity(payloadEntity);
+      } catch (err) {
+        showNotification(getErrorMessage(err), 'warning');
+        setEntity(null);
+      }
+    };
+
+    run();
+  }, [log, showNotification]);
+
   if (!log) return null;
 
   return (
@@ -32,8 +57,8 @@ export default function LogDetailsModal({ open, log, onClose }: Props) {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: { xs: '90%', sm: 600 },
-          maxHeight: '80vh',
+          width: { xs: '90%', sm: 600, md: 840 },
+          maxHeight: '90vh',
           overflow: 'auto',
         }}
       >
@@ -48,70 +73,63 @@ export default function LogDetailsModal({ open, log, onClose }: Props) {
               <FontAwesomeIcon icon={faEye} style={{ marginRight: 8 }} />
               Detalhes do Log {log.id}
             </Typography>
-            <Button onClick={onClose} size="small">
+            <IconButton onClick={onClose}>
               <FontAwesomeIcon icon={faClose} />
-            </Button>
+            </IconButton>
           </Box>
 
-          <Box sx={{ mb: 3 }}>
-            <Box
-              sx={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: 2,
-                mb: 2,
-              }}
-            >
-              <Box>
-                <Typography variant="body2" color="text.secondary">
-                  Usuário
-                </Typography>
-                <Typography variant="body1">
-                  {log.user.fullName} ({log.user.username})
-                </Typography>
-              </Box>
-              <Box>
-                <Typography variant="body2" color="text.secondary">
-                  Ação
-                </Typography>
-                <Typography variant="body1">{log.action}</Typography>
-              </Box>
-              <Box>
-                <Typography variant="body2" color="text.secondary">
-                  Data/Hora
-                </Typography>
-                <Typography variant="body1">
-                  {new Date(log.createdAt).toLocaleString()}
-                </Typography>
-              </Box>
-            </Box>
-          </Box>
-
-          {log.usedPayload && (
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 2,
+              justifyContent: 'space-between',
+              mb: 4,
+              width: '100%',
+            }}
+          >
             <Box>
-              <Typography
-                variant="subtitle2"
-                color="text.secondary"
-                gutterBottom
-              >
-                {log.action.includes('create')
-                  ? 'Payload Utilizado'
-                  : 'Estado anterior'}
+              <Typography variant="body2" color="text.secondary">
+                Usuário
               </Typography>
-              <Paper
-                sx={{
-                  p: 2,
-                  fontFamily: 'monospace',
-                  fontSize: '0.8rem',
-                  whiteSpace: 'pre',
-                  maxHeight: '540px',
-                  overflow: 'auto',
-                }}
-              >
-                {formatPayload(log.usedPayload)}
-              </Paper>
+              <Typography variant="body1">
+                {log.user.fullName} ({log.user.username})
+              </Typography>
             </Box>
-          )}
+            <Box>
+              <Typography variant="body2" color="text.secondary">
+                Ação
+              </Typography>
+              <Typography variant="body1">{log.action}</Typography>
+            </Box>
+            <Box>
+              <Typography variant="body2" color="text.secondary">
+                Data/Hora
+              </Typography>
+              <Typography variant="body1">
+                {new Date(log.createdAt).toLocaleString()}
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box display="flex" width="100%" gap={4}>
+            {log.usedPayload && (
+              <JsonWrapper
+                title={
+                  log.action.includes('create')
+                    ? 'Payload Utilizado'
+                    : 'Estado anterior'
+                }
+                jsonContent={formatPayload(log.usedPayload)}
+              />
+            )}
+
+            {entity ? (
+              <JsonWrapper
+                title="Estado Atual"
+                jsonContent={JSON.stringify(entity, null, 2)}
+              />
+            ) : null}
+          </Box>
         </Paper>
       </Box>
     </Modal>
