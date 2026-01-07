@@ -7,7 +7,7 @@ services:
     env_file:
       - ./Api/.env
     ports:
-      - '5210:5210' # ajuste conforme a porta da sua API
+      - '5211:5210' # ajuste conforme a porta da sua API
     restart: unless-stopped
     stop_grace_period: 10s
     security_opt:
