@@ -3,7 +3,7 @@ services:
     build:
       context: ./Api
       dockerfile: Dockerfile
-    container_name: admin-panel-api
+    container_name: sms-convenios-api
     env_file:
       - ./Api/.env
     ports:
