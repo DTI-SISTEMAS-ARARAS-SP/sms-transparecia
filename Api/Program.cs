@@ -55,7 +55,13 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
     {
-        policy.WithOrigins(frontendUrl)
+        policy.WithOrigins("https://aplicativos.pma.sp.gov.br",
+            "http://aplicativos.pma.sp.gov.br",
+            "https://sistemas.pma.sp.gov.br:5210",
+            "https://192.168.1.106",
+            "http://192.168.1.106",
+            "https://192.168.1.110:5210",
+            "http://192.168.1.110:5210",frontendUrl)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials(); // necessário se usar cookies ou JWT no header
