@@ -2,6 +2,7 @@ using Api.Dtos;
 using Api.Services.DocConveniosServices;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace Api.Controllers
 {
   [ApiController]
@@ -114,6 +115,7 @@ namespace Api.Controllers
     }
 
     // GET: api/docconvenios/{id}/download
+
     [HttpGet("{id:int}/download")]
     public async Task<IActionResult> Download(int id)
     {

@@ -1,0 +1,21 @@
+# Habilita reescrita
+RewriteEngine On
+RewriteBase /sms-convenios/
+
+# Não reescrever arquivos/pastas reais
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Não reescrever assets (js, css, imgs, fontes, mapas)
+RewriteRule ^assets/ - [L]
+RewriteRule \.(js|mjs|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|map)$ - [L]
+
+# SPA fallback: qualquer outra rota -> index.html
+RewriteRule . /sms-convenios/index.html [L]
+
+# Tipos corretos (impede "MIME text/html em .js")
+AddType application/javascript .js .mjs
+AddType text/css .css
+AddType font/woff2 .woff2
+AddType image/svg+xml .svg

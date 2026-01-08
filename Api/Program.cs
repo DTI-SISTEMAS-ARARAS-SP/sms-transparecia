@@ -61,7 +61,9 @@ builder.Services.AddCors(options =>
             "https://192.168.1.106",
             "http://192.168.1.106",
             "https://192.168.1.110:5210",
-            "http://192.168.1.110:5210",frontendUrl)
+            "http://192.168.1.110:5210",
+            "https://araras.sp.gov.br",
+            frontendUrl)
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials(); // necessário se usar cookies ou JWT no header
@@ -172,6 +174,8 @@ app.UseExceptionHandlerMiddleware();
 app.UseCors("FrontendPolicy");
 
 // app.UseHttpsRedirection();
+
+app.UseRouting();
 
 app.UseRequireAuthorization();
 app.UseValidateUserPermissions();

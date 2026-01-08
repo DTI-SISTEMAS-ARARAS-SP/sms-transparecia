@@ -1,4 +1,4 @@
-import { DocConvenioRead } from '../docConvenioInterfaces/DocConvenioRead';
+import type { DocConvenioRead } from "../docConvenioInterfaces/DocConvenioRead";
 
 export interface ConvenioRead {
   id: number;

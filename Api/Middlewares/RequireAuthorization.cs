@@ -1,4 +1,5 @@
 using Api.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 using System.Threading.Tasks;
@@ -19,7 +20,17 @@ namespace Api.Middlewares
       var path = context.Request.Path.Value?.ToLower() ?? "";
       var method = context.Request.Method.ToUpper();
 
+
+
+      // Permitir rotas de autenticação
       if (path.Contains("/auth/"))
+      {
+        await _next(context);
+        return;
+      }
+
+      // Permitir rota de download
+      if (path.Contains("/download"))
       {
         await _next(context);
         return;
@@ -28,7 +39,6 @@ namespace Api.Middlewares
       if (method is "GET" or "POST" or "PUT" or "DELETE")
       {
         var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
-
         if (string.IsNullOrWhiteSpace(authHeader) || !authHeader.StartsWith("Bearer "))
         {
           context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
@@ -37,7 +47,6 @@ namespace Api.Middlewares
         }
 
         var token = authHeader.Substring("Bearer ".Length).Trim();
-
         if (!JsonWebToken.Verify(token))
         {
           context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;

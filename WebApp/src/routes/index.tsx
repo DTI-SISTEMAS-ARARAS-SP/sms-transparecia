@@ -51,20 +51,25 @@ const protectedRoutes = privateRoutes.map((route) => ({
   ),
 }));
 
-const router = createBrowserRouter([
-  {
-    element: <CleanLayout />,
-    children: [
-      { path: "/", element: <Login /> },
-      ...publicRoutes,
-      { path: "/unauthorized", element: <UnauthorizedAccess /> },
-    ],
-  },
+const router = createBrowserRouter(
+  [
+    {
+      element: <CleanLayout />,
+      children: [
+        { path: "/", element: <Login /> },
+        ...publicRoutes,
+        { path: "/unauthorized", element: <UnauthorizedAccess /> },
+      ],
+    },
 
+    {
+      element: <DefaultLayout />,
+      children: protectedRoutes,
+    },
+  ],
   {
-    element: <DefaultLayout />,
-    children: protectedRoutes,
-  },
-]);
+    basename: "/sms-convenios/",
+  }
+);
 
 export default router;
