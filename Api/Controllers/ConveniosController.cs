@@ -14,6 +14,7 @@ namespace Api.Controllers
     private readonly UpdateConvenio _updateConvenio;
     private readonly DeleteConvenio _deleteConvenio;
     private readonly SearchConvenios _searchConvenios;
+    private readonly GetConveniosAtivos _getConveniosAtivos;
 
     public ConveniosController(
       CreateConvenio createConvenio,
@@ -21,7 +22,8 @@ namespace Api.Controllers
       GetConvenioById getConvenioById,
       UpdateConvenio updateConvenio,
       DeleteConvenio deleteConvenio,
-      SearchConvenios searchConvenios)
+      SearchConvenios searchConvenios,
+      GetConveniosAtivos getConveniosAtivos)
     {
       _createConvenio = createConvenio;
       _getAllConvenios = getAllConvenios;
@@ -29,6 +31,7 @@ namespace Api.Controllers
       _updateConvenio = updateConvenio;
       _deleteConvenio = deleteConvenio;
       _searchConvenios = searchConvenios;
+      _getConveniosAtivos = getConveniosAtivos;
     }
 
     // POST: api/convenios
@@ -50,6 +53,14 @@ namespace Api.Controllers
     {
       var allConvenios = await _getAllConvenios.ExecuteAsync(page, pageSize);
       return Ok(allConvenios);
+    }
+
+    // GET: api/convenios/ativos
+    [HttpGet("ativos")]
+    public async Task<IActionResult> GetAtivos()
+    {
+      var convenios = await _getConveniosAtivos.ExecuteAsync();
+      return Ok(convenios);
     }
 
     // GET: api/convenios/{id}

@@ -36,6 +36,13 @@ namespace Api.Middlewares
         return;
       }
 
+      //´Permitir rota de GET ATIVOS
+      if (path.Contains("/ativos"))
+      {
+        await _next(context);
+        return;
+      }
+
       if (method is "GET" or "POST" or "PUT" or "DELETE")
       {
         var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
