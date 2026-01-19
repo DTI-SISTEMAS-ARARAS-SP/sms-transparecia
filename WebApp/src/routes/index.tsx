@@ -17,6 +17,7 @@ import {
   UsersProvider,
 } from "../contexts";
 import { PERMISSIONS } from "../permissions";
+import Convenios from "../pages/Convenios";
 
 const publicRoutes = [
   { path: "/login", element: <Login /> },
@@ -54,7 +55,7 @@ const privateRoutes = [
   {
     path: "/convenios",
     element: <Convenios />,
-    requiredPermission: PermissionsMap.CONVENIOS,
+    requiredPermission: PERMISSIONS.CONVENIOS,
   },
 ];
 
@@ -67,30 +68,32 @@ const protectedRoutes = privateRoutes.map((route) => ({
   ),
 }));
 
-const router = createBrowserRouter([
-  {
-    element: <CleanLayout />,
-    children: [
-      { path: "/", element: <Login /> },
-      ...publicRoutes,
-      { path: "/unauthorized", element: <UnauthorizedAccess /> },
-      { path: "*", element: <NotFound /> },
-    ],
-  },
+const router = createBrowserRouter(
+  [
+    {
+      element: <CleanLayout />,
+      children: [
+        { path: "/", element: <Login /> },
+        ...publicRoutes,
+        { path: "/unauthorized", element: <UnauthorizedAccess /> },
+        { path: "*", element: <NotFound /> },
+      ],
+    },
 
-  {
-    element: (
-      <SystemResourcesProvider>
-        <PermissionsProvider>
-          <DefaultLayout />
-        </PermissionsProvider>
-      </SystemResourcesProvider>
-    ),
-    children: protectedRoutes,
-  },
+    {
+      element: (
+        <SystemResourcesProvider>
+          <PermissionsProvider>
+            <DefaultLayout />
+          </PermissionsProvider>
+        </SystemResourcesProvider>
+      ),
+      children: protectedRoutes,
+    },
+  ],
   {
     basename: "/sms-convenios/",
   },
-]);
+);
 
 export default router;

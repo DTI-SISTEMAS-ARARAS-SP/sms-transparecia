@@ -1,14 +1,10 @@
-import { Box, CircularProgress, Container } from '@mui/material';
-import {
-  DashboardDevelopmentTips,
-  PageTitle,
-  StatsCard,
-} from '../../components';
-import { useEffect, useState } from 'react';
-import type { SystemStats } from '../../interfaces';
-import { getSystemStats } from '../../services';
-import { buildStatsCards } from '../../helpers';
-import { useNotification, usePermissions, useThemeMode } from '../../hooks';
+import { Box, CircularProgress, Container } from "@mui/material";
+import { PageTitle, StatsCard } from "../../components";
+import { useEffect, useState } from "react";
+import type { SystemStats } from "../../interfaces";
+import { getSystemStats } from "../../services";
+import { buildStatsCards } from "../../helpers";
+import { useNotification, usePermissions, useThemeMode } from "../../hooks";
 
 export default function DashBoard() {
   const [systemStats, setSystemStats] = useState<SystemStats | null>(null);
@@ -23,7 +19,7 @@ export default function DashBoard() {
         setSystemStats(stats);
       } catch (err) {
         console.error(err);
-        showNotification('Erro ao carregar estatísticas do sistema', 'error');
+        showNotification("Erro ao carregar estatísticas do sistema", "error");
       }
     }
 
@@ -31,8 +27,8 @@ export default function DashBoard() {
   }, [showNotification]);
 
   const getBg = (originalBg: string) => {
-    if (mode === 'dark') {
-      return originalBg.split(', ').reverse().join(', ');
+    if (mode === "dark") {
+      return originalBg.split(", ").reverse().join(", ");
     }
     return originalBg;
   };
@@ -45,9 +41,9 @@ export default function DashBoard() {
     <Container
       sx={{
         mt: 4,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
       <PageTitle icon="dashboard" title="Dashboard" />
@@ -66,8 +62,6 @@ export default function DashBoard() {
           ))}
         </Box>
       )}
-
-      <DashboardDevelopmentTips />
     </Container>
   );
 }

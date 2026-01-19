@@ -9,13 +9,12 @@ import {
 } from "../../components";
 import type { UserFormValues, UserRead } from "../../interfaces";
 import { useUsers, useNotification } from "../../hooks";
-import { usePermissions } from "../../hooks";
+import { PERMISSIONS } from "../../permissions";
 import { getErrorMessage } from "../../helpers";
 
 export default function Users() {
   const { fetchUsers, addUser, editUser, removeUser } = useUsers();
   const { showNotification } = useNotification();
-  const { permissionsMap } = usePermissions();
   const [editingUser, setEditingUser] = useState<UserRead | null>(null);
   const [open, setOpen] = useState(false);
   const [confirmDialog, setConfirmDialog] = useState({
@@ -82,10 +81,7 @@ export default function Users() {
         textAlign: "center",
       }}
     >
-      <PageTitle
-        icon={permissionsMap.USERS}
-        title="Gerenciamento de Usuários"
-      />
+      <PageTitle icon={PERMISSIONS.USERS} title="Gerenciamento de Usuários" />
 
       <UserForm onSubmit={handleCreate} />
 
