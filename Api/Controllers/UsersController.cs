@@ -36,19 +36,11 @@ namespace Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] UserCreateDto dto)
         {
-<<<<<<< HEAD
-            if (dto == null) return BadRequest("Payload inválido.");
-
-            var created = await _createUser.ExecuteAsync(dto);
-            if (created == null)
-                return BadRequest("Falha ao criar usuário.");
-=======
             if (dto == null) return BadRequest(new { message = "Payload inválido." });
 
             var created = await _createUser.ExecuteAsync(dto);
             if (created == null)
                 return BadRequest(new { message = "Falha ao criar usuário." });
->>>>>>> template/main
 
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }

@@ -35,7 +35,11 @@ namespace Api.Controllers
       if (endDate.HasValue)
         endDate = DateTime.SpecifyKind(endDate.Value, DateTimeKind.Utc);
 
-      var logs = await _getLogsReport.ExecuteAsync(userId, action, startDate, endDate, page, pageSize);
+
+      string? startDateStr = startDate?.ToString("o");
+      string? endDateStr = endDate?.ToString("o");
+
+      var logs = await _getLogsReport.ExecuteAsync(userId, action, startDateStr, endDateStr, page, pageSize);
 
       return Ok(logs);
     }

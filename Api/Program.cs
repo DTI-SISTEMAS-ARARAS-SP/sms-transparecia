@@ -64,6 +64,7 @@ builder.Services.AddCors(options =>
             "http://192.168.1.110:5210",
             "https://araras.sp.gov.br",
             "http://162.214.126.37",
+            "http://localhost:5173",
             frontendUrl)
               .AllowAnyHeader()
               .AllowAnyMethod()

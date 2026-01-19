@@ -110,11 +110,7 @@ namespace Api.Services.UsersServices
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-<<<<<<< HEAD
-                await _createSystemLog.ExecuteAsync(LogActionDescribe.Update("User", user.Id));
-=======
                 await _createSystemLog.ExecuteAsync(LogActionDescribe.Update("User", user.Id), data: prevStateJson);
->>>>>>> template/main
 
                 var updatedUser = await _userRepo.Query()
                     .Include(u => u.AccessPermissions)

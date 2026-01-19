@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20251210160144_ConvenioseDocs")]
-    partial class ConvenioseDocs
+    [Migration("20260119172344_MudançasLogica")]
+    partial class MudançasLogica
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -210,6 +210,10 @@ namespace Api.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<string>("UsedPayload")
+                        .HasColumnType("text")
+                        .HasColumnName("used_payload");
+
                     b.Property<int>("UserId")
                         .HasColumnType("integer")
                         .HasColumnName("user_id");
@@ -345,7 +349,7 @@ namespace Api.Migrations
             modelBuilder.Entity("Api.Models.DocConvenio", b =>
                 {
                     b.HasOne("Api.Models.Convenio", "Convenio")
-                        .WithMany()
+                        .WithMany("Documentos")
                         .HasForeignKey("ConvenioId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -370,6 +374,11 @@ namespace Api.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Api.Models.Convenio", b =>
+                {
+                    b.Navigation("Documentos");
                 });
 
             modelBuilder.Entity("Api.Models.User", b =>
