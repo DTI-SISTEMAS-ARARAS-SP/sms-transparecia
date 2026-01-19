@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -12,22 +12,21 @@ import {
   Typography,
   Box,
   TextField,
-} from '@mui/material';
-import { Edit, Delete, Search } from '@mui/icons-material';
+} from "@mui/material";
+import { Edit, Delete, Search } from "@mui/icons-material";
 
-import type { SystemResource } from '../../interfaces';
-import { useSystemResources } from '../../hooks';
+import type { SystemResource } from "../../interfaces";
+import { useSystemResources } from "../../hooks";
+import NoResultsFound from "../NoResultsFound";
 
 interface SystemResourcesTableProps {
   onEdit: (resource: SystemResource) => void;
   onDelete?: (id: number) => void;
-  refreshTrigger?: number;
 }
 
 export default function SystemResourcesTable({
   onEdit,
   onDelete,
-  refreshTrigger,
 }: SystemResourcesTableProps) {
   const {
     resources,
@@ -36,27 +35,33 @@ export default function SystemResourcesTable({
     fetchSystemResources,
     setPagination,
   } = useSystemResources();
-  const [searchKey, setSearchKey] = useState('');
+  const [searchKey, setSearchKey] = useState("");
 
   useEffect(() => {
     fetchSystemResources(pagination.page, pagination.pageSize, searchKey);
-  }, [fetchSystemResources, pagination.page, pagination.pageSize, searchKey, refreshTrigger]);
+  }, [fetchSystemResources, pagination.page, pagination.pageSize, searchKey]);
 
   const handleChangePage = (_: unknown, newPage: number) => {
-    setPagination((prev) => ({ ...prev, page: newPage + 1 }));
+    setPagination((prev) => ({
+      ...prev,
+      page: newPage + 1,
+    }));
   };
 
   const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPagination({
-      ...pagination,
+    setPagination((prev) => ({
+      ...prev,
       page: 1,
       pageSize: parseInt(e.target.value, 10),
-    });
+    }));
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setPagination((prev) => ({ ...prev, page: 1 }));
+    setPagination((prev) => ({
+      ...prev,
+      page: 1,
+    }));
     fetchSystemResources(1, pagination.pageSize, searchKey);
   };
 
@@ -107,7 +112,7 @@ export default function SystemResourcesTable({
                 </TableCell>
               </TableRow>
             ) : resources.length > 0 ? (
-              resources.map((resource) => (
+              resources.map((resource: SystemResource) => (
                 <TableRow key={resource.id} hover>
                   <TableCell>{resource.id}</TableCell>
                   <TableCell>{resource.name}</TableCell>
@@ -116,12 +121,14 @@ export default function SystemResourcesTable({
                     <IconButton
                       color="primary"
                       onClick={() => onEdit(resource)}
+                      title="Editar recurso"
                     >
                       <Edit />
                     </IconButton>
                     <IconButton
                       color="error"
                       onClick={() => onDelete?.(resource.id!)}
+                      title="Excluir recurso"
                     >
                       <Delete />
                     </IconButton>
@@ -131,7 +138,7 @@ export default function SystemResourcesTable({
             ) : (
               <TableRow>
                 <TableCell colSpan={4} align="center">
-                  Nenhum recurso encontrado
+                  <NoResultsFound entity="recurso" />
                 </TableCell>
               </TableRow>
             )}

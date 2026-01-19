@@ -36,11 +36,11 @@ namespace Api.Controllers
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] SystemResourceCreateDto dto)
     {
-      if (dto == null) return BadRequest("Payload inválido.");
+      if (dto == null) return BadRequest(new { message = "Payload inválido." });
 
       var created = await _createSystemResource.ExecuteAsync(dto);
       if (created == null)
-        return BadRequest("Falha ao criar recurso do sistema.");
+        return BadRequest(new { message = "Falha ao criar recurso do sistema." });
 
       return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
     }
@@ -66,7 +66,11 @@ namespace Api.Controllers
     public async Task<IActionResult> GetById(int id)
     {
       var resource = await _getSystemResourceById.ExecuteAsync(id);
+<<<<<<< HEAD
       if (resource == null) return NotFound();
+=======
+      if (resource == null) return NotFound(new { message = "Recurso do sistema não encontrado." });
+>>>>>>> template/main
       return Ok(resource);
     }
 
@@ -74,10 +78,17 @@ namespace Api.Controllers
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, [FromBody] SystemResourceUpdateDto dto)
     {
+<<<<<<< HEAD
       if (dto == null) return BadRequest("Payload inválido.");
 
       var updated = await _updateSystemResource.ExecuteAsync(id, dto);
       if (updated == null) return NotFound();
+=======
+      if (dto == null) return BadRequest(new { message = "Payload inválido." });
+
+      var updated = await _updateSystemResource.ExecuteAsync(id, dto);
+      if (updated == null) return NotFound(new { message = "Recurso do sistema não encontrado." });
+>>>>>>> template/main
 
       return Ok(updated);
     }
@@ -87,7 +98,11 @@ namespace Api.Controllers
     public async Task<IActionResult> Delete(int id)
     {
       var deleted = await _deleteSystemResource.ExecuteAsync(id);
+<<<<<<< HEAD
       if (!deleted) return NotFound();
+=======
+      if (!deleted) return NotFound(new { message = "Recurso do sistema não encontrado." });
+>>>>>>> template/main
       return NoContent();
     }
 
@@ -96,7 +111,11 @@ namespace Api.Controllers
     public async Task<IActionResult> Search([FromQuery] string key, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
       if (string.IsNullOrWhiteSpace(key))
+<<<<<<< HEAD
         return BadRequest("A chave de pesquisa é obrigatória.");
+=======
+        return BadRequest(new { message = "A chave de pesquisa é obrigatória." });
+>>>>>>> template/main
 
       var foundResources = await _searchSystemResources.ExecuteAsync(key, page, pageSize);
       return Ok(foundResources);

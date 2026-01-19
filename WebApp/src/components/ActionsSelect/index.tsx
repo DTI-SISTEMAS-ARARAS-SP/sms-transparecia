@@ -1,4 +1,4 @@
-import { TextField, MenuItem } from '@mui/material';
+import { TextField, MenuItem } from "@mui/material";
 
 interface ActionOption {
   value: string;
@@ -6,16 +6,16 @@ interface ActionOption {
 }
 
 interface ActionsSelectProps {
-  value: string;
+  value: string | undefined;
   onChange: (value: string) => void;
 }
 
 const actionOptions: ActionOption[] = [
-  { value: 'create', display: 'Criação' },
-  { value: 'update', display: 'Edição' },
-  { value: 'delete', display: 'Exclusão' },
-  { value: 'login', display: 'Login' },
-  { value: 'senha', display: 'Alteração de senha' },
+  { value: "create", display: "Criação" },
+  { value: "update", display: "Edição" },
+  { value: "delete", display: "Exclusão" },
+  { value: "login", display: "Login" },
+  { value: "senha", display: "Alteração de senha" },
 ];
 
 export default function ActionsSelect({ value, onChange }: ActionsSelectProps) {
@@ -24,7 +24,7 @@ export default function ActionsSelect({ value, onChange }: ActionsSelectProps) {
       label="Ação"
       select
       fullWidth
-      value={value}
+      value={value || ""}
       onChange={(e) => onChange(e.target.value)}
       slotProps={{
         select: { displayEmpty: true },

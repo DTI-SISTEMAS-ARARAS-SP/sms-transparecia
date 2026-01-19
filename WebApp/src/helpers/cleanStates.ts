@@ -3,7 +3,7 @@ import type {
   DocConvenioFormValues,
   SystemResource,
   UserFormValues,
-} from '../interfaces';
+} from "../interfaces";
 
 interface FormStates {
   userForm: UserFormValues;
@@ -14,29 +14,29 @@ interface FormStates {
 
 export const cleanStates: FormStates = {
   userForm: {
-    username: '',
-    email: '',
-    fullName: '',
-    password: '',
+    username: "",
+    email: "",
+    fullName: "",
+    password: "",
     permissions: [],
   },
   systemResource: {
-    name: '',
-    exhibitionName: '',
+    name: "",
+    exhibitionName: "",
   },
   convenioForm: {
-    numeroConvenio: '',
-    titulo: '',
-    descricao: '',
-    orgaoConcedente: '',
-    dataPublicacaoDiario: '',
-    dataVigenciaInicio: '',
-    dataVigenciaFim: '',
+    numeroConvenio: "",
+    titulo: "",
+    descricao: "",
+    orgaoConcedente: "",
+    dataPublicacaoDiario: "",
+    dataVigenciaInicio: "",
+    dataVigenciaFim: "",
     status: true,
   },
   docConvenioForm: {
     convenioId: 0,
-    tipoDocumento: '',
-    descricao: '',
+    tipoDocumento: "",
+    descricao: "",
   },
 };

@@ -12,8 +12,7 @@ import { useLocation } from "react-router-dom";
 import AuthUserDisplay from "../AuthUserDisplay";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
-import { useAuth } from "../../hooks";
-import { filterMenuByPermissions } from "../../permissions";
+import { useAuth, usePermissions } from "../../hooks";
 
 interface SidePanelProps {
   open: boolean;
@@ -25,11 +24,12 @@ const DRAWER_CLOSED = 52;
 
 export default function SidePanel({ open, onNavigate }: SidePanelProps) {
   const { authUser, handleLogout } = useAuth();
+  const { getMenuItemsForUser } = usePermissions();
   const location = useLocation();
 
   const drawerWidth = open ? DRAWER_OPEN : DRAWER_CLOSED;
 
-  const filteredMenu = filterMenuByPermissions(authUser);
+  const filteredMenu = getMenuItemsForUser(authUser);
 
   return (
     <Drawer
@@ -57,6 +57,7 @@ export default function SidePanel({ open, onNavigate }: SidePanelProps) {
     >
       <Box sx={{ overflow: "hidden" }}>
         <AuthUserDisplay collapsed={!open} />
+
         <List>
           {filteredMenu.map((item) => {
             const isActive = location.pathname === item.route;
@@ -73,9 +74,8 @@ export default function SidePanel({ open, onNavigate }: SidePanelProps) {
                     onClick={() => onNavigate(item.route)}
                     sx={{
                       backgroundColor: isActive
-                        ? "rgba(25, 210, 50, 0.6)"
+                        ? (theme) => `${theme.palette.primary.main}`
                         : "transparent",
-                      "&:hover": { backgroundColor: "rgba(25, 210, 50, 0.6)" },
                     }}
                   >
                     <ListItemIcon>

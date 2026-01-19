@@ -1,25 +1,103 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles";
 
-export const defineTheme = (mode: 'light' | 'dark') =>
+/**
+ * 🎨 Paletas de cores inspiradas no projeto Catppuccin
+ * https://github.com/catppuccin/catppuccin
+ */
+
+export const defineTheme = (mode: "light" | "dark") =>
   createTheme({
     palette: {
       mode,
-      ...(mode === 'light'
+      ...(mode === "light"
         ? {
-            // Cores do modo claro
-            primary: { main: '#1976d2' },
-            secondary: { main: '#2e7d32' },
-            background: { default: '#f5f5f5', paper: '#fff' },
-            text: { primary: '#000', secondary: '#555' },
+            // 🌤️ Modo claro (inspirado em Catppuccin Latte)
+            primary: {
+              main: "#8839ef",
+              light: "#9d5ef3",
+              dark: "#6c2bd9",
+              contrastText: "#ffffff",
+            },
+            secondary: {
+              main: "#179299",
+              light: "#2fb9c0",
+              dark: "#117377",
+              contrastText: "#ffffff",
+            },
+            success: {
+              main: "#40a02b",
+              light: "#6abf5b",
+              dark: "#2c7a1f",
+            },
+            error: {
+              main: "#d20f39",
+              light: "#e34b63",
+              dark: "#a80c2d",
+            },
+            warning: {
+              main: "#fe640b",
+              light: "#ff8a3d",
+              dark: "#c94f08",
+            },
+            info: {
+              main: "#1e66f5",
+              light: "#4c86f7",
+              dark: "#184ec0",
+            },
+            background: {
+              default: "#eff1f5",
+              paper: "#ffffff",
+            },
+            text: {
+              primary: "#4c4f69",
+              secondary: "#5c5f77",
+            },
           }
         : {
-            // Cores do modo escuro
-            primary: { main: '#90caf9' },
-            secondary: { main: '#66bb6a' },
-            background: { default: '#121212', paper: '#1e1e1e' },
-            text: { primary: '#fff', secondary: '#aaa' },
+            // 🌙 Modo escuro (inspirado em Catppuccin Mocha)
+            primary: {
+              main: "#cba6f7",
+              light: "#dbc1fa",
+              dark: "#a883e6",
+              contrastText: "#1e1e2e",
+            },
+            secondary: {
+              main: "#94e2d5",
+              light: "#b3f0e7",
+              dark: "#6fc8bb",
+              contrastText: "#1e1e2e",
+            },
+            success: {
+              main: "#a6e3a1",
+              light: "#c4f1c0",
+              dark: "#7acb75",
+            },
+            error: {
+              main: "#f38ba8",
+              light: "#f6a6bd",
+              dark: "#e06c8d",
+            },
+            warning: {
+              main: "#fab387",
+              light: "#fccca8",
+              dark: "#e4946a",
+            },
+            info: {
+              main: "#89b4fa",
+              light: "#a6c8fc",
+              dark: "#6a96e8",
+            },
+            background: {
+              default: "#1e1e2e",
+              paper: "#313244",
+            },
+            text: {
+              primary: "#cdd6f4",
+              secondary: "#bac2de",
+            },
           }),
     },
+
     typography: {
       fontFamily:
         'Roboto, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif',

@@ -30,18 +30,17 @@ namespace Api.Services.AuthServices
             }
             catch
             {
-                return null; // token externo inválido
+                return null;
             }
 
             var emailClaim = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var usernameClaim = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
             var loginClaim = principal.Claims.FirstOrDefault(c => c.Type == "login")?.Value;
+            var usernameClaim = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 
-            // Prioriza 'login' se disponível, depois 'Name', depois 'Email'
             var username = loginClaim ?? usernameClaim;
             var email = emailClaim;
 
-            if (email == null && username == null)
+            if (emailClaim == null && username == null)
                 return null;
 
             var user = await _context.Users
@@ -53,11 +52,11 @@ namespace Api.Services.AuthServices
                 return null;
 
             var claims = DefaultJWTClaims.Generate(user);
-            var token = JsonWebToken.Create(claims, expireMinutes: 120);
+            var token = JsonWebToken.Create(claims);
 
             await _createSystemLog.ExecuteAsync(
                 userId: user.Id,
-                action: LogActionDescribe.Login(user.Username)
+                action: LogActionDescribe.ExternalLogin(user.Username)
             );
 
             var allowedResources = (user.AccessPermissions ?? new List<AccessPermission>())

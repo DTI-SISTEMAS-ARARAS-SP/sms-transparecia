@@ -17,31 +17,21 @@ import { Edit, Delete, Search } from "@mui/icons-material";
 
 import type { UserRead } from "../../interfaces";
 import { useUsers } from "../../hooks";
+import NoResultsFound from "../NoResultsFound";
 import { formatDate } from "../../helpers";
 
 interface UsersTableProps {
   onEdit: (user: UserRead) => void;
   onDelete?: (id: number) => void;
-  refreshTrigger?: number;
 }
 
-export default function UsersTable({
-  onEdit,
-  onDelete,
-  refreshTrigger,
-}: UsersTableProps) {
+export default function UsersTable({ onEdit, onDelete }: UsersTableProps) {
   const { users, pagination, loading, fetchUsers, setPagination } = useUsers();
   const [searchKey, setSearchKey] = useState("");
 
   useEffect(() => {
     fetchUsers(pagination.page, pagination.pageSize, searchKey);
-  }, [
-    fetchUsers,
-    pagination.page,
-    pagination.pageSize,
-    searchKey,
-    refreshTrigger,
-  ]);
+  }, [fetchUsers, pagination.page, pagination.pageSize, searchKey]);
 
   const handleChangePage = (_: unknown, newPage: number) => {
     setPagination((prev) => ({ ...prev, page: newPage + 1 }));
@@ -120,13 +110,18 @@ export default function UsersTable({
                   <TableCell>
                     {formatDate(new Date(user.updatedAt).toLocaleString())}
                   </TableCell>
-                  <TableCell align="right">
-                    <IconButton color="primary" onClick={() => onEdit(user)}>
+                  <TableCell sx={{ minWidth: 112 }} align="center">
+                    <IconButton
+                      color="primary"
+                      onClick={() => onEdit(user)}
+                      title="Editar usuário"
+                    >
                       <Edit />
                     </IconButton>
                     <IconButton
                       color="error"
                       onClick={() => onDelete?.(user.id)}
+                      title="Excluir usuário"
                     >
                       <Delete />
                     </IconButton>
@@ -136,7 +131,7 @@ export default function UsersTable({
             ) : (
               <TableRow>
                 <TableCell colSpan={7} align="center">
-                  Nenhum usuário encontrado
+                  <NoResultsFound entity="usuário" />
                 </TableCell>
               </TableRow>
             )}

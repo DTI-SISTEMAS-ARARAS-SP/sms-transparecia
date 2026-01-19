@@ -1,30 +1,35 @@
-import { useState } from 'react';
-import { Container } from '@mui/material';
+import { useState } from "react";
+import { Container } from "@mui/material";
 import {
   PageTitle,
   UserEditionModal,
   UserForm,
   UsersTable,
-} from '../../components';
-import type { UserFormValues, UserRead } from '../../interfaces';
-import { useUsers, useSnackbar } from '../../hooks';
-import { PermissionsMap } from '../../permissions';
+  ConfirmDialog,
+} from "../../components";
+import type { UserFormValues, UserRead } from "../../interfaces";
+import { useUsers, useNotification } from "../../hooks";
+import { usePermissions } from "../../hooks";
+import { getErrorMessage } from "../../helpers";
 
 export default function Users() {
-  const { addUser, editUser, removeUser } = useUsers();
-  const { showSnackbar } = useSnackbar();
+  const { fetchUsers, addUser, editUser, removeUser } = useUsers();
+  const { showNotification } = useNotification();
+  const { permissionsMap } = usePermissions();
   const [editingUser, setEditingUser] = useState<UserRead | null>(null);
   const [open, setOpen] = useState(false);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [confirmDialog, setConfirmDialog] = useState({
+    open: false,
+    id: 0,
+  });
 
   async function handleCreate(user: UserFormValues) {
     try {
       await addUser(user);
-      showSnackbar('Usuário cadastrado com sucesso!', 'success');
-      setRefreshTrigger(prev => prev + 1);
+      showNotification("Usuário cadastrado com sucesso!", "success");
+      await fetchUsers();
     } catch (err) {
-      console.error(err);
-      showSnackbar('Erro ao cadastrar usuário', 'error');
+      showNotification(getErrorMessage(err), "error");
     }
   }
 
@@ -32,29 +37,33 @@ export default function Users() {
     if (!editingUser) return;
     try {
       await editUser({ ...editingUser, ...user });
-      showSnackbar('Usuário atualizado com sucesso!', 'success');
-      setOpen(false);
-      setRefreshTrigger(prev => prev + 1);
+      showNotification("Usuário atualizado com sucesso!", "success");
+      await fetchUsers();
     } catch (err) {
-      console.error(err);
-      showSnackbar('Erro ao atualizar usuário', 'error');
+      showNotification(getErrorMessage(err), "error");
+    } finally {
+      setOpen(false);
     }
   }
 
   async function handleDelete(id: number) {
-    const confirmDelete = confirm(
-      `Tem certeza que deseja excluir o usuário selecionado?`
-    );
-    if (!confirmDelete) return;
+    setConfirmDialog({ open: true, id });
+  }
 
+  async function confirmDelete() {
     try {
-      await removeUser(id);
-      showSnackbar('Usuário excluído com sucesso!', 'success');
-      setRefreshTrigger(prev => prev + 1);
+      await removeUser(confirmDialog.id);
+      showNotification("Usuário excluído com sucesso!", "success");
+      await fetchUsers();
     } catch (err) {
-      console.error(err);
-      showSnackbar('Erro ao excluir usuário', 'error');
+      showNotification(getErrorMessage(err), "error");
+    } finally {
+      setConfirmDialog({ open: false, id: 0 });
     }
+  }
+
+  function cancelDelete() {
+    setConfirmDialog({ open: false, id: 0 });
   }
 
   function handleOpenEditionModal(user: UserRead) {
@@ -66,27 +75,35 @@ export default function Users() {
     <Container
       sx={{
         mt: 4,
-        alignItems: 'center',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        textAlign: 'center',
+        alignItems: "center",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        textAlign: "center",
       }}
     >
       <PageTitle
-        icon={PermissionsMap.USERS}
+        icon={permissionsMap.USERS}
         title="Gerenciamento de Usuários"
       />
 
       <UserForm onSubmit={handleCreate} />
 
-      <UsersTable onEdit={handleOpenEditionModal} onDelete={handleDelete} refreshTrigger={refreshTrigger} />
+      <UsersTable onEdit={handleOpenEditionModal} onDelete={handleDelete} />
 
       <UserEditionModal
         open={open}
         user={editingUser}
         onClose={() => setOpen(false)}
         onSubmit={handleUpdate}
+      />
+
+      <ConfirmDialog
+        open={confirmDialog.open}
+        title="Confirmar Exclusão"
+        message="Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita."
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
       />
     </Container>
   );

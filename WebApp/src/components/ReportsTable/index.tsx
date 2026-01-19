@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -10,10 +10,14 @@ import {
   TablePagination,
   Typography,
   Box,
+  IconButton,
 } from "@mui/material";
 
 import type { SystemLog, SystemLogFiltersPayload } from "../../interfaces";
 import { useReports } from "../../hooks/useReports";
+import LogDetailsModal from "../LogDetailsModal";
+import { Visibility } from "@mui/icons-material";
+import NoResultsFound from "../NoResultsFound";
 
 interface ReportsTableProps {
   filters: SystemLogFiltersPayload;
@@ -21,6 +25,8 @@ interface ReportsTableProps {
 
 export default function ReportsTable({ filters }: ReportsTableProps) {
   const { logs, pagination, setPagination, setReportFilters } = useReports();
+  const [selectedLog, setSelectedLog] = useState<SystemLog | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     setReportFilters({
@@ -45,6 +51,16 @@ export default function ReportsTable({ filters }: ReportsTableProps) {
     });
   };
 
+  const handleViewDetails = (log: SystemLog) => {
+    setSelectedLog(log);
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedLog(null);
+  };
+
   return (
     <Paper sx={{ p: 2 }}>
       <Box
@@ -64,6 +80,7 @@ export default function ReportsTable({ filters }: ReportsTableProps) {
               <TableCell>Usuário</TableCell>
               <TableCell>Ação</TableCell>
               <TableCell>Data</TableCell>
+              <TableCell align="right">Ações</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -76,12 +93,22 @@ export default function ReportsTable({ filters }: ReportsTableProps) {
                   <TableCell>
                     {new Date(log.createdAt).toLocaleString()}
                   </TableCell>
+                  <TableCell align="right">
+                    {log.usedPayload && (
+                      <IconButton
+                        onClick={() => handleViewDetails(log)}
+                        title="Ver detalhes do log"
+                      >
+                        <Visibility />
+                      </IconButton>
+                    )}
+                  </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={4} align="center">
-                  Nenhum log encontrado
+                <TableCell colSpan={5} align="center">
+                  <NoResultsFound entity="log" />
                 </TableCell>
               </TableRow>
             )}
@@ -101,6 +128,11 @@ export default function ReportsTable({ filters }: ReportsTableProps) {
           rowsPerPageOptions={[5, 10, 25]}
         />
       </Box>
+      <LogDetailsModal
+        open={modalOpen}
+        log={selectedLog}
+        onClose={handleCloseModal}
+      />
     </Paper>
   );
 }

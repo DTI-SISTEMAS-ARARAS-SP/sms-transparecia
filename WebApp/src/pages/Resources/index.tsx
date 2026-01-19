@@ -1,37 +1,48 @@
-import { useState } from 'react';
-import { Container } from '@mui/material';
-import type { SystemResource } from '../../interfaces';
-import { useSystemResources, useSnackbar } from '../../hooks';
+import { useState } from "react";
+import { Container } from "@mui/material";
+import type { SystemResource } from "../../interfaces";
+import {
+  useNotification,
+  usePermissions,
+  useSystemResources,
+} from "../../hooks";
 import {
   SystemResourceForm,
   SystemResourcesTable,
   SystemResourceEditionModal,
+  ConfirmDialog,
   PageTitle,
-} from '../../components';
-import { PermissionsMap } from '../../permissions';
+} from "../../components";
+import { getErrorMessage } from "../../helpers";
 
 export default function Resources() {
   const {
+    fetchSystemResources,
     addSystemResource,
     editSystemResource,
     removeSystemResource,
+    pagination,
   } = useSystemResources();
-  const { showSnackbar } = useSnackbar();
+  const { showNotification } = useNotification();
+  const { permissionsMap } = usePermissions();
 
   const [editingResource, setEditingResource] = useState<SystemResource | null>(
-    null
+    null,
   );
   const [open, setOpen] = useState(false);
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [confirmDialog, setConfirmDialog] = useState({
+    open: false,
+    id: 0,
+  });
 
   async function handleCreate(resource: SystemResource) {
     try {
       await addSystemResource(resource);
-      showSnackbar('Recurso criado com sucesso!', 'success');
-      setRefreshTrigger(prev => prev + 1);
+      showNotification("Recurso criado com sucesso!", "success");
+      fetchSystemResources(pagination.page, pagination.pageSize); // atualiza tabela
     } catch (err) {
       console.error(err);
-      showSnackbar('Erro ao criar recurso', 'error');
+      showNotification(getErrorMessage(err), "error");
     }
   }
 
@@ -39,29 +50,35 @@ export default function Resources() {
     if (!editingResource) return;
     try {
       await editSystemResource({ ...editingResource, ...resource });
-      showSnackbar('Recurso atualizado com sucesso!', 'success');
-      setOpen(false);
-      setRefreshTrigger(prev => prev + 1);
+      showNotification("Recurso atualizado com sucesso!", "success");
+      fetchSystemResources(pagination.page, pagination.pageSize);
     } catch (err) {
       console.error(err);
-      showSnackbar('Erro ao atualizar recurso', 'error');
+      showNotification(getErrorMessage(err), "error");
+    } finally {
+      setOpen(false);
     }
   }
 
   async function handleDelete(id: number) {
-    const confirmDelete = confirm(
-      'Tem certeza que deseja excluir este recurso?'
-    );
-    if (!confirmDelete) return;
+    setConfirmDialog({ open: true, id });
+  }
 
+  async function confirmDelete() {
     try {
-      await removeSystemResource(id.toString());
-      showSnackbar('Recurso excluído com sucesso!', 'success');
-      setRefreshTrigger(prev => prev + 1);
+      await removeSystemResource(confirmDialog.id.toString());
+      showNotification("Recurso excluído com sucesso!", "success");
+      fetchSystemResources(pagination.page, pagination.pageSize);
     } catch (err) {
       console.error(err);
-      showSnackbar('Erro ao excluir recurso', 'error');
+      showNotification(getErrorMessage(err), "error");
+    } finally {
+      setConfirmDialog({ open: false, id: 0 });
     }
+  }
+
+  function cancelDelete() {
+    setConfirmDialog({ open: false, id: 0 });
   }
 
   function handleOpenEditionModal(resource: SystemResource) {
@@ -73,15 +90,15 @@ export default function Resources() {
     <Container
       sx={{
         mt: 4,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        textAlign: 'center',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        textAlign: "center",
       }}
     >
       <PageTitle
-        icon={PermissionsMap.RESOURCES}
+        icon={permissionsMap.RESOURCES}
         title="Gerenciamento de Recursos"
       />
 
@@ -90,7 +107,6 @@ export default function Resources() {
       <SystemResourcesTable
         onEdit={handleOpenEditionModal}
         onDelete={handleDelete}
-        refreshTrigger={refreshTrigger}
       />
 
       <SystemResourceEditionModal
@@ -98,6 +114,14 @@ export default function Resources() {
         resource={editingResource}
         onClose={() => setOpen(false)}
         onSubmit={handleUpdate}
+      />
+
+      <ConfirmDialog
+        open={confirmDialog.open}
+        title="Confirmar Exclusão"
+        message="Tem certeza que deseja excluir este Recurso? Esta ação não pode ser desfeita."
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
       />
     </Container>
   );

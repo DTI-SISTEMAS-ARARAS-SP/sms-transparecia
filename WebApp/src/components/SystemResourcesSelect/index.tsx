@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useContext } from "react";
 import {
   FormControl,
   InputLabel,
@@ -10,11 +10,12 @@ import {
   CircularProgress,
   Box,
   TextField,
-} from '@mui/material';
-import { useSystemResources, useAuth } from '../../hooks';
-import { filterAssignablePermissions } from '../../permissions/Rules';
-import type { SystemResource } from '../../interfaces';
-import type { SelectChangeEvent } from '@mui/material';
+} from "@mui/material";
+import { useAuth } from "../../hooks";
+import SystemResourcesContext from "../../contexts/SystemResourcesContext";
+import { filterAssignablePermissions } from "../../permissions/Rules";
+import type { SystemResource } from "../../interfaces";
+import type { SelectChangeEvent } from "@mui/material";
 
 interface Props {
   value: number[];
@@ -28,7 +29,9 @@ export default function SystemResourceSelect({
   readOnly = false,
 }: Props) {
   const { authUser } = useAuth();
-  const { fetchSystemResourcesForSelect, loading } = useSystemResources();
+  const { fetchSystemResourcesForSelect, loading } = useContext(
+    SystemResourcesContext,
+  )!;
 
   const [options, setOptions] = useState<SystemResource[]>([]);
 
@@ -55,8 +58,8 @@ export default function SystemResourceSelect({
   function handleChange(event: SelectChangeEvent<string[]>) {
     const { value } = event.target;
     const newValue =
-      typeof value === 'string'
-        ? value.split(',').map(Number)
+      typeof value === "string"
+        ? value.split(",").map(Number)
         : value.map(Number);
     onChange(newValue);
   }
@@ -73,7 +76,7 @@ export default function SystemResourceSelect({
     return (
       <TextField
         label="Permissões"
-        value={selectedNames.join(', ') || 'Sem permissões'}
+        value={selectedNames.join(", ") || "Sem permissões"}
         slotProps={{ input: { readOnly: true } }}
         fullWidth
       />
@@ -88,7 +91,7 @@ export default function SystemResourceSelect({
         value={value.map(String)}
         onChange={handleChange}
         input={<OutlinedInput label="Permissões" />}
-        renderValue={() => selectedNames.join(', ')}
+        renderValue={() => selectedNames.join(", ")}
       >
         {filteredOptions.map((resource) => (
           <MenuItem key={resource.id} value={String(resource.id)}>

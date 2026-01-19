@@ -1,13 +1,13 @@
-import api from '../../api';
+import api from "../../api";
 import type {
   SystemResourcesPagination,
   SystemResource,
-} from '../../interfaces';
+} from "../../interfaces";
 
 export async function listSystemResources(
   pageNumber = 1,
   pageSize = 10,
-  searchKey: string = ''
+  searchKey: string = "",
 ) {
   const defaultParams = `page=${pageNumber}&pageSize=${pageSize}`;
 
@@ -20,6 +20,11 @@ export async function listSystemResources(
 }
 
 export async function listSystemResourcesForSelect() {
-  const { data } = await api.get<SystemResource[]>('/resources/options');
+  const { data } = await api.get<SystemResource[]>("/resources/options");
+  return data;
+}
+
+export async function listSystemResourceById(id: number) {
+  const { data } = await api.get<SystemResource>(`/resources/${id}`);
   return data;
 }

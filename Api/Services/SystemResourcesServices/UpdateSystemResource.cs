@@ -28,6 +28,22 @@ namespace Api.Services.SystemResourcesServices
 
       var resource = await ValidateEntity.EnsureEntityExistsAsync(_repo, id, "SystemResource");
 
+<<<<<<< HEAD
+=======
+      // Capturar o estado anterior
+      var prevState = new
+      {
+        resource.Id,
+        resource.Name,
+        resource.ExhibitionName,
+        resource.Active
+      };
+      var prevStateJson = System.Text.Json.JsonSerializer.Serialize(prevState, new System.Text.Json.JsonSerializerOptions
+      {
+        PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase
+      });
+
+>>>>>>> template/main
       if (!string.IsNullOrWhiteSpace(dto.Name) || !string.IsNullOrWhiteSpace(dto.ExhibitionName))
       {
         bool isDuplicate = await _repo.Query()
@@ -47,7 +63,11 @@ namespace Api.Services.SystemResourcesServices
 
       var updated = await _repo.UpdateAsync(resource);
 
+<<<<<<< HEAD
       await _createSystemLog.ExecuteAsync(LogActionDescribe.Update("SystemResource", updated.Id));
+=======
+      await _createSystemLog.ExecuteAsync(LogActionDescribe.Update("SystemResource", updated.Id), data: prevStateJson);
+>>>>>>> template/main
 
       return new SystemResourceReadDto
       {

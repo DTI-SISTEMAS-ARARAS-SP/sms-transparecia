@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { Box, TextField, Button } from '@mui/material';
-import type { SystemResource } from '../../interfaces';
-import { cleanStates } from '../../helpers';
+import { useState, useEffect } from "react";
+import { Box, TextField, Button, Paper } from "@mui/material";
+import type { SystemResource } from "../../interfaces";
+import { cleanStates } from "../../helpers";
 
 interface Props {
   onSubmit: (resource: SystemResource) => void;
@@ -32,16 +32,17 @@ export default function SystemResourceForm({ onSubmit, resource }: Props) {
   }
 
   return (
-    <Box
+    <Paper
       component="form"
       onSubmit={handleSubmit}
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         gap: 2,
-        mb: 2,
-        width: '100%',
-        maxWidth: 400,
+        marginBottom: 4,
+        maxWidth: 500,
+        padding: 2,
+        width: "100%",
       }}
     >
       <TextField
@@ -60,9 +61,20 @@ export default function SystemResourceForm({ onSubmit, resource }: Props) {
         required
         fullWidth
       />
-      <Button variant="contained" type="submit">
-        {resource ? 'Atualizar' : 'Cadastrar'}
-      </Button>
-    </Box>
+
+      <Box display="flex" width="100%" gap={2} justifyContent="center">
+        <Button variant="contained" type="submit">
+          {resource ? "Atualizar" : "Cadastrar"}
+        </Button>
+
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => setForm(cleanStates.systemResource)}
+        >
+          Limpar
+        </Button>
+      </Box>
+    </Paper>
   );
 }

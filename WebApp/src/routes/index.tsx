@@ -1,17 +1,22 @@
 import { createBrowserRouter } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import {
-  Convenios,
+  DashBoard,
   Login,
+  NotFound,
   PasswordReset,
-  Profile,
   Reports,
   Resources,
   UnauthorizedAccess,
   Users,
 } from "../pages";
-import { PermissionsMap } from "../permissions/PermissionsMap";
 import { CleanLayout, DefaultLayout } from "../layouts";
+import {
+  PermissionsProvider,
+  SystemResourcesProvider,
+  UsersProvider,
+} from "../contexts";
+import { PERMISSIONS } from "../permissions";
 
 const publicRoutes = [
   { path: "/login", element: <Login /> },
@@ -19,21 +24,32 @@ const publicRoutes = [
 ];
 
 const privateRoutes = [
-  { path: "/profile", element: <Profile /> },
+  {
+    path: "/dashboard",
+    element: <DashBoard />,
+  },
   {
     path: "/users",
-    element: <Users />,
-    requiredPermission: PermissionsMap.USERS,
+    element: (
+      <UsersProvider>
+        <Users />
+      </UsersProvider>
+    ),
+    requiredPermission: PERMISSIONS.USERS,
   },
   {
     path: "/resources",
     element: <Resources />,
-    requiredPermission: PermissionsMap.RESOURCES,
+    requiredPermission: PERMISSIONS.RESOURCES,
   },
   {
     path: "/reports",
-    element: <Reports />,
-    requiredPermission: PermissionsMap.REPORTS,
+    element: (
+      <UsersProvider>
+        <Reports />
+      </UsersProvider>
+    ),
+    requiredPermission: PERMISSIONS.REPORTS,
   },
   {
     path: "/convenios",
@@ -51,25 +67,30 @@ const protectedRoutes = privateRoutes.map((route) => ({
   ),
 }));
 
-const router = createBrowserRouter(
-  [
-    {
-      element: <CleanLayout />,
-      children: [
-        { path: "/", element: <Login /> },
-        ...publicRoutes,
-        { path: "/unauthorized", element: <UnauthorizedAccess /> },
-      ],
-    },
+const router = createBrowserRouter([
+  {
+    element: <CleanLayout />,
+    children: [
+      { path: "/", element: <Login /> },
+      ...publicRoutes,
+      { path: "/unauthorized", element: <UnauthorizedAccess /> },
+      { path: "*", element: <NotFound /> },
+    ],
+  },
 
-    {
-      element: <DefaultLayout />,
-      children: protectedRoutes,
-    },
-  ],
+  {
+    element: (
+      <SystemResourcesProvider>
+        <PermissionsProvider>
+          <DefaultLayout />
+        </PermissionsProvider>
+      </SystemResourcesProvider>
+    ),
+    children: protectedRoutes,
+  },
   {
     basename: "/sms-convenios/",
-  }
-);
+  },
+]);
 
 export default router;
